@@ -16,6 +16,8 @@
     },    
     "require": {
         "php": ">=5.3.0",
-        "webignition/web-resource-model":">=0.1,<2.0"
-    }      
+        "webignition/web-resource-model":">=0.1,<2.0",
+        "querypath/QueryPath": ">=3.0.0"
+    },
+    "minimum-stability":"dev"
 }

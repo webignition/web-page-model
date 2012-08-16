@@ -1,6 +1,12 @@
 {
-    "hash": "6c566cc1cbb426b695d11a5eeeaa1a2d",
+    "hash": "17d3f2d22f6a4b4d3cf5700581d8b803",
     "packages": [
+        {
+            "package": "querypath/QueryPath",
+            "version": "dev-master",
+            "source-reference": "4f7e4ab5f540f128214c66e87bbf072ad7e146ef",
+            "commit-date": "1340643808"
+        },
         {
             "package": "webignition/internet-media-type",
             "version": "0.3"
@@ -22,7 +28,7 @@
     "aliases": [
 
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [
 
     ]
