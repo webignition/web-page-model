@@ -32,7 +32,7 @@ class SetContentTypeTest extends BaseTest {
             try {
                 $webPage->setContentType($contentTypeString);
                 $this->fail('Invalid content type exception not thrown for "'.$contentTypeString.'"');
-            } catch (\webignition\WebResource\WebPage\Exception $exception) {
+            } catch (\webignition\WebResource\Exception $exception) {
                 $this->assertEquals(1, $exception->getCode());
             }
         }
