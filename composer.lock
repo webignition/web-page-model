@@ -9,7 +9,7 @@
         },
         {
             "package": "webignition/internet-media-type",
-            "version": "0.3"
+            "version": "0.4"
         },
         {
             "package": "webignition/quoted-string",
