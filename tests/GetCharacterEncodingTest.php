@@ -17,6 +17,14 @@ class GetCharacterEncodingTest extends BaseTest {
         $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
         
         $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
-    }    
+    }
+    
+    
+    public function testGetCharacterEncodingFromContentType() {
+        $webPage = new WebPage();
+        $webPage->setContentType('text/html; charset=utf-8');
+        
+        $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
+    }
     
 }

@@ -71,9 +71,9 @@ class Parser {
         $charsetString = '';
         @$this->getDomQuery('meta[charset]')->each(function ($index, \DOMElement $domElement) use (&$charsetString) {            
             $charsetString = $domElement->getAttribute('charset');
-        });
+        });      
         
-        if (is_string($charsetString)) {
+        if (is_string($charsetString) && $charsetString !== '') {
             return $charsetString;
         }
         

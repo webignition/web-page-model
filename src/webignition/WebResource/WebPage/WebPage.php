@@ -90,14 +90,18 @@ class WebPage extends WebResource
      *
      * @return string|null
      */
-    public function getCharacterEncoding() {
+    public function getCharacterEncoding() {        
         if (is_null($this->documentCharacterEncoding)) {
             $this->documentCharacterEncoding = $this->getWebPageParser()->getCharacterEncoding();
         }
         
         if (!is_null($this->documentCharacterEncoding)) {
             return strtolower($this->documentCharacterEncoding);
-        }       
+        } 
+        
+        if ($this->getContentType()->hasParameter('charset')) {
+            return $this->getContentType()->getParameter('charset')->getValue();
+        }
         
         return null;
     }
