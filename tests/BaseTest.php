@@ -1,41 +1,42 @@
 <?php
 
-use webignition\WebResource\WebPage\WebPage;
-
-class WebPageTest extends PHPUnit_Framework_TestCase {
-
-    public function testSetValidContentType() {
-        $contentTypeStrings = array(
-            'text/html',
-            'application/xhtml+xml',
-            'application/xml'
-        );
-        
-        $webPage = new WebPage();
-        
-        foreach ($contentTypeStrings as $contentTypeString) {
-            $webPage->setContentType($contentTypeString);
-            $this->assertEquals($contentTypeString, (string)$webPage->getContentType());
-        }
-    }   
+abstract class BaseTest extends PHPUnit_Framework_TestCase {
     
-    public function testSetInvalidContentType() {
-        $contentTypeStrings = array(
-            'image/png',
-            'text/css',
-            'text/javascript'
-        );
-        
-        $webPage = new WebPage();
-        
-        foreach ($contentTypeStrings as $contentTypeString) {
-            try {
-                $webPage->setContentType($contentTypeString);
-                $this->fail('Invalid content type exception not thrown for "'.$contentTypeString.'"');
-            } catch (\webignition\WebResource\WebPage\Exception $exception) {
-                $this->assertEquals(1, $exception->getCode());
-            }
-        }
+const FIXTURES_DATA_RELATIVE_PATH = '/Fixtures';      
+    
+    /**
+     * Get the path to store fixtures for a given test
+     * 
+     * @param string $testName Test method name
+     * @return string
+     */
+    protected function getFixturesDataPath($testName) {        
+        return __DIR__ . self::FIXTURES_DATA_RELATIVE_PATH . '/' . str_replace('\\', DIRECTORY_SEPARATOR, get_class($this)) . '/' . $testName;
+    }  
+    
+    /**
+     * Get the content for a given test fixture
+     * 
+     * @param string $testName Test method name
+     * @param string $fixtureName Name of fixture, is fixture relative filename
+     * @return string 
+     */
+    protected function getFixtureContent($testName, $fixtureName) {
+        return file_get_contents($this->getFixtureContentPath($testName, $fixtureName));
     } 
     
+    
+    /**
+     * Get the path for a given test fixture
+     * 
+     * @param string $testName Test method name
+     * @param string $fixtureName Name of fixture, is fixture relative filename
+     * @return string 
+     */
+    private function getFixtureContentPath($testName, $fixtureName) {
+        return $this->getFixturesDataPath($testName) . '/' . $fixtureName;
+    }
+    
+    
+   
 }

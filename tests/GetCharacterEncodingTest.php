@@ -2,40 +2,21 @@
 
 use webignition\WebResource\WebPage\WebPage;
 
-class WebPageTest extends PHPUnit_Framework_TestCase {
+class GetCharacterEncodingTest extends BaseTest {
 
-    public function testSetValidContentType() {
-        $contentTypeStrings = array(
-            'text/html',
-            'application/xhtml+xml',
-            'application/xml'
-        );
-        
+    public function testGetCharacterEncodingFromDocumentMetaEquivElement() {
         $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
         
-        foreach ($contentTypeStrings as $contentTypeString) {
-            $webPage->setContentType($contentTypeString);
-            $this->assertEquals($contentTypeString, (string)$webPage->getContentType());
-        }
-    }   
+        $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
+    }
     
-    public function testSetInvalidContentType() {
-        $contentTypeStrings = array(
-            'image/png',
-            'text/css',
-            'text/javascript'
-        );
-        
+    
+    public function testGetCharacterEncodingFromDocumentMetaCharsetElement() {
         $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
         
-        foreach ($contentTypeStrings as $contentTypeString) {
-            try {
-                $webPage->setContentType($contentTypeString);
-                $this->fail('Invalid content type exception not thrown for "'.$contentTypeString.'"');
-            } catch (\webignition\WebResource\WebPage\Exception $exception) {
-                $this->assertEquals(1, $exception->getCode());
-            }
-        }
-    } 
+        $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
+    }    
     
 }

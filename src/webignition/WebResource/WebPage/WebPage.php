@@ -2,9 +2,7 @@
 namespace webignition\WebResource\WebPage;
 
 use webignition\WebResource\WebResource;
-
-//use SimplyTestable\WorkerBundle\Services\WebPage\Parser as WebPageParser;
-//
+use webignition\WebResource\WebPage\Parser as WebPageParser;
 use webignition\InternetMediaType\Parser\Parser as InternetMediaTypeParser;
 use webignition\InternetMediaType\InternetMediaType;
 
@@ -13,6 +11,12 @@ use webignition\InternetMediaType\InternetMediaType;
  */
 class WebPage extends WebResource
 {
+    /**
+     *
+     * @var WebPageParser
+     */
+    private $parser;    
+    
     /**
      *  Map of valid web page internet media type types and subtypes
      * 
@@ -26,7 +30,16 @@ class WebPage extends WebResource
             'xhtml+xml',
             'xml'
         )
-    );   
+    );
+    
+    /**
+     * Character encoding as specified in the document body. This supercedes
+     * any character encoding specified in the content type header.
+     * 
+     * @var string
+     */
+    private $documentCharacterEncoding;
+    
     
     /**
      *
@@ -71,5 +84,36 @@ class WebPage extends WebResource
         $internetMediaTypeParser = new InternetMediaTypeParser();
         return $internetMediaTypeParser->parse($contentTypeString);       
     }
+    
+    
+    /**
+     *
+     * @return string|null
+     */
+    public function getCharacterEncoding() {
+        if (is_null($this->documentCharacterEncoding)) {
+            $this->documentCharacterEncoding = $this->getWebPageParser()->getCharacterEncoding();
+        }
+        
+        if (!is_null($this->documentCharacterEncoding)) {
+            return strtolower($this->documentCharacterEncoding);
+        }       
+        
+        return null;
+    }
+    
+    
+    /**
+     *
+     * @return WebPageParser
+     */
+    private function getWebPageParser() {
+        if (is_null($this->parser)) {
+            $this->parser = new WebPageParser();
+            $this->parser->setWebPage($this);
+        }
+        
+        return $this->parser;
+    }     
     
 }
