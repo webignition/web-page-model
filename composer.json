@@ -1,0 +1,21 @@
+{
+    "name": "webignition/web-page-model",
+    "description": "Model of a web page, based off webignition/web-resource-model",
+    "keywords": ["model", "webpage"],
+    "homepage": "https://github.com/webignition/web-page-model",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jon Cram",
+            "email": "jon@webignition.net"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },    
+    "require": {
+        "php": ">=5.3.0",
+        "webignition/web-resource-model":">=0.1,<2.0"
+    }      
+}
