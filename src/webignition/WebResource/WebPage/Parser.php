@@ -16,6 +16,17 @@ class Parser {
     
     
     /**
+     * Was the detected content type provided in a valid way?
+     * 
+     * We can detect some invalid means of specifying the content type and it's
+     * useful to know whether what was found was valid.
+     *
+     * @var boolean
+     */
+    private $isContentTypeValid = true;
+    
+    
+    /**
      *
      * @param WebPage $webPage
      * @return \webignition\WebResource\WebPage\Parser 
@@ -43,6 +54,14 @@ class Parser {
         return new \QueryPath\DOMQuery($this->webPage->getContent(), $cssSelector, $options);
     }
     
+    /**
+     *
+     * @return boolean
+     */
+    public function getIsContentTypeValid() {
+        return $this->isContentTypeValid;
+    }
+    
     
     /**
      * Get the character encoding from the current web page
@@ -52,11 +71,11 @@ class Parser {
      */
     public function getCharacterEncoding() {        
         $metaContentTypeSelectors = array(
-            'meta[http-equiv=Content-Type]',
-            'meta[name=Content-Type]' // invalid but happens
+            'meta[http-equiv=Content-Type]' => true,
+            'meta[name=Content-Type]' => false // invalid but happens
         );
         
-        foreach ($metaContentTypeSelectors as $metaContentTypeSelector) {
+        foreach ($metaContentTypeSelectors as $metaContentTypeSelector => $isValid) {
             $contentTypeString = null;
 
             @$this->getDomQuery($metaContentTypeSelector)->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
@@ -70,6 +89,7 @@ class Parser {
                 $mediaType = $mediaTypeParser->parse($contentTypeString);
 
                 if ($mediaType->hasParameter('charset')) {
+                    $this->isContentTypeValid = $isValid;
                     return (string)$mediaType->getParameter('charset')->getValue();
                 }
             }            

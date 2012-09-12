@@ -27,6 +27,18 @@ class WebPage extends WebResource
     private $documentCharacterEncoding;
     
     
+    /**
+     * The character encoding can be specified in unabiguous but invalid ways. The parser
+     * can understand some invalidity.
+     * 
+     * It is sometimes necessary to know if the detected character coding was
+     * invalidly specified.
+     * 
+     * @var boolean
+     */
+    private $isDocumentCharacterEncodingValid = true;
+    
+    
     public function __construct() {
         $validContentTypes = array(
             'text/html',
@@ -38,6 +50,15 @@ class WebPage extends WebResource
             $mediaTypeParser = new InternetMediaTypeParser();
             $this->addValidContentType($mediaTypeParser->parse($validContentTypeString));
         }
+    }  
+    
+    
+    /**
+     *
+     * @return boolean
+     */
+    public function getIsDocumentCharacterEncodingValid() {
+        return $this->isDocumentCharacterEncodingValid;
     }    
     
     /**
@@ -50,6 +71,7 @@ class WebPage extends WebResource
         }
         
         if (!is_null($this->documentCharacterEncoding)) {
+            $this->isDocumentCharacterEncodingValid = $this->getWebPageParser()->getIsContentTypeValid();
             return strtolower($this->documentCharacterEncoding);
         } 
         
