@@ -50,22 +50,29 @@ class Parser {
      * 
      * @return string|null
      */
-    public function getCharacterEncoding() {
-        $contentTypeString = null;
+    public function getCharacterEncoding() {        
+        $metaContentTypeSelectors = array(
+            'meta[http-equiv=Content-Type]',
+            'meta[name=Content-Type]' // invalid but happens
+        );
         
-        @$this->getDomQuery('meta[http-equiv=Content-Type]')->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
-            $contentTypeString = $domElement->getAttribute('content');
-        });
-        
-        if (is_string($contentTypeString)) {
-            $mediaTypeParser = new InternetMediaTypeParser();
-            
-            /* @var $mediaType InternetMediaType */
-            $mediaType = $mediaTypeParser->parse($contentTypeString);
-            
-            if ($mediaType->hasParameter('charset')) {
-                return (string)$mediaType->getParameter('charset')->getValue();
-            }
+        foreach ($metaContentTypeSelectors as $metaContentTypeSelector) {
+            $contentTypeString = null;
+
+            @$this->getDomQuery($metaContentTypeSelector)->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
+                $contentTypeString = $domElement->getAttribute('content');
+            });
+
+            if (is_string($contentTypeString)) {
+                $mediaTypeParser = new InternetMediaTypeParser();
+
+                /* @var $mediaType InternetMediaType */
+                $mediaType = $mediaTypeParser->parse($contentTypeString);
+
+                if ($mediaType->hasParameter('charset')) {
+                    return (string)$mediaType->getParameter('charset')->getValue();
+                }
+            }            
         }
         
         $charsetString = '';
@@ -76,6 +83,11 @@ class Parser {
         if (is_string($charsetString) && $charsetString !== '') {
             return $charsetString;
         }
+        
+        $contentTypeString = null;
+        @$this->getDomQuery('meta[name=Content-Type]')->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
+            $contentTypeString = $domElement->getAttribute('content');
+        });      
         
         return null;     
     }

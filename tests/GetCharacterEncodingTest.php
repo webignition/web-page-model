@@ -4,6 +4,13 @@ use webignition\WebResource\WebPage\WebPage;
 
 class GetCharacterEncodingTest extends BaseTest {
 
+    public function testGetCharacterEncodingFromDocumentMetaContentType() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
+        
+        $this->assertEquals('iso-8859-1', $webPage->getCharacterEncoding());
+    }    
+    
     public function testGetCharacterEncodingFromDocumentMetaEquivElement() {
         $webPage = new WebPage();
         $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
