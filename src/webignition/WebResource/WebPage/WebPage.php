@@ -94,6 +94,24 @@ class WebPage extends WebResource
         }
         
         return $this->parser;
-    }     
+    } 
+    
+    
+    /**
+     *
+     * @param string $cssSelector
+     * @param array $options
+     * @return \QueryPath\DOMQuery 
+     */
+    public function find($cssSelector, $options = array()) {
+        $options += array(
+            'ignore_parser_warnings' => TRUE,
+            'convert_to_encoding' => 'ISO-8859-1',
+            'convert_from_encoding' => 'auto',
+            'use_parser' => 'html'
+        );     
+        
+        return new \QueryPath\DOMQuery($this->getContent(), $cssSelector, $options);
+    }
     
 }
