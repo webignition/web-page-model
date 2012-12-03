@@ -4,24 +4,24 @@ use webignition\WebResource\WebPage\WebPage;
 
 class GetScriptValuesTest extends BaseTest {
     
-//    public function testGetScriptSrcValues() {
-//        $webPage = new WebPage();
-//        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html')); 
-//        
-//        $scriptSrcValues = array();
-//        
-//        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {            
-//            $src = trim($domElement->getAttribute('src'));
-//            if ($src != '') {
-//                $scriptSrcValues[] = $src;
-//            }
-//        });
-//        
-//        $this->assertEquals(array(
-//            '//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
-//            '/vendor/twitter-bootstrap/bootstrap/js/bootstrap.js'
-//        ), $scriptSrcValues);
-//    }
+    public function testGetScriptSrcValues() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html')); 
+        
+        $scriptSrcValues = array();
+        
+        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {            
+            $src = trim($domElement->getAttribute('src'));
+            if ($src != '') {
+                $scriptSrcValues[] = $src;
+            }
+        });
+        
+        $this->assertEquals(array(
+            '//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
+            '/vendor/twitter-bootstrap/bootstrap/js/bootstrap.js'
+        ), $scriptSrcValues);
+    }
     
     
     public function testGetScriptValues() {
