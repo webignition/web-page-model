@@ -121,4 +121,9 @@ class WebPage extends WebResource
         return $result;
     }
     
+    
+    public function locate(\DOMElement $domElement) {
+        
+    }
+    
 }
