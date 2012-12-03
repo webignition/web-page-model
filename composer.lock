@@ -2,26 +2,221 @@
     "hash": "17d3f2d22f6a4b4d3cf5700581d8b803",
     "packages": [
         {
-            "package": "querypath/QueryPath",
+            "name": "querypath/QueryPath",
             "version": "dev-master",
-            "source-reference": "4f7e4ab5f540f128214c66e87bbf072ad7e146ef",
-            "commit-date": "1340643808"
+            "source": {
+                "type": "git",
+                "url": "https://github.com/technosophos/querypath.git",
+                "reference": "0341dc09427928115022b3553b7117ddcbc0ec08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/technosophos/querypath/archive/0341dc09427928115022b3553b7117ddcbc0ec08.zip",
+                "reference": "0341dc09427928115022b3553b7117ddcbc0ec08",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "2012-09-18 03:01:54",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "QueryPath": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "HTML/XML querying (CSS 4 or XPath) and processing (like jQuery)",
+            "homepage": "https://github.com/technosophos/querypath",
+            "keywords": [
+                "xml",
+                "jquery",
+                "css",
+                "html",
+                "xslt"
+            ]
         },
         {
-            "package": "webignition/internet-media-type",
-            "version": "0.4"
+            "name": "webignition/internet-media-type",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/internet-media-type.git",
+                "reference": "0.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/webignition/internet-media-type/zipball/0.4",
+                "reference": "0.4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "webignition/quoted-string": ">=0.1,<2.0",
+                "webignition/string-parser": ">=0.1, <2.0"
+            },
+            "time": "2012-08-16 15:14:02",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net",
+                    "homepage": null,
+                    "role": null
+                }
+            ],
+            "description": "PHP model of an http://en.wikipedia.org/wiki/Internet_media_type",
+            "homepage": "https://github.com/webignition/internet-media-type",
+            "keywords": [
+                "internet media type",
+                "media type",
+                "media-type",
+                "content type",
+                "content-type"
+            ]
         },
         {
-            "package": "webignition/quoted-string",
-            "version": "0.2"
+            "name": "webignition/quoted-string",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/quoted-string.git",
+                "reference": "0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/webignition/quoted-string/zipball/0.2",
+                "reference": "0.2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "webignition/string-parser": "0.1"
+            },
+            "time": "2012-08-15 16:44:56",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net",
+                    "homepage": null,
+                    "role": null
+                }
+            ],
+            "description": "A parser for string values that are encapsulated in double quotes (ASCII 34)",
+            "homepage": "https://github.com/webignition/quoted-string",
+            "keywords": [
+                "parser",
+                "quoted-string"
+            ]
         },
         {
-            "package": "webignition/string-parser",
-            "version": "0.1"
+            "name": "webignition/string-parser",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/string-parser.git",
+                "reference": "0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/webignition/string-parser/zipball/0.1",
+                "reference": "0.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "2012-08-15 16:36:12",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net",
+                    "homepage": null,
+                    "role": null
+                }
+            ],
+            "description": "Abstract state-based string parser",
+            "homepage": "https://github.com/webignition/string-parser",
+            "keywords": [
+                "parser",
+                "string"
+            ]
         },
         {
-            "package": "webignition/web-resource-model",
-            "version": "0.3"
+            "name": "webignition/web-resource-model",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/web-resource-model.git",
+                "reference": "0.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/webignition/web-resource-model/zipball/0.4",
+                "reference": "0.4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "webignition/internet-media-type": ">=0.1,<2.0"
+            },
+            "time": "2012-08-16 08:16:06",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Model of a web-based resource",
+            "homepage": "https://github.com/webignition/web-resource-model",
+            "keywords": [
+                "web",
+                "modem"
+            ]
         }
     ],
     "packages-dev": null,
