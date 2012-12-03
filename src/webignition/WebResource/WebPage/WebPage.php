@@ -109,9 +109,16 @@ class WebPage extends WebResource
             'convert_to_encoding' => 'ISO-8859-1',
             'convert_from_encoding' => 'auto',
             'use_parser' => 'html'
-        );     
+        );
         
-        return new \QueryPath\DOMQuery($this->getContent(), $cssSelector, $options);
+        $currentLibxmlUseInternalErrorsValue = libxml_use_internal_errors();        
+        libxml_use_internal_errors(true);
+        
+        $result = new \QueryPath\DOMQuery($this->getContent(), $cssSelector, $options);
+        
+        libxml_use_internal_errors($currentLibxmlUseInternalErrorsValue);
+        
+        return $result;
     }
     
 }
