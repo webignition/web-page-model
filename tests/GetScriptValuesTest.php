@@ -3,6 +3,33 @@
 use webignition\WebResource\WebPage\WebPage;
 
 class GetScriptValuesTest extends BaseTest {
+
+    public function testGetScriptSrcValuesGB2312Content() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html')); 
+        
+        $scriptSrcValues = array();
+        
+        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {                        
+            $src = trim($domElement->getAttribute('src'));
+            if ($src != '') {
+                $scriptSrcValues[] = $src;
+            }
+        });
+        
+        $this->assertEquals(array(
+            '/min/?f=images/js/j.js,include/dedeajax2.js',
+            'http://www.yixieshi.com/plus/count.php?view=yes&aid=9935&mid=1',
+            'http://cpro.baidustatic.com/cpro/ui/c.js',
+            'http://pagead2.googlesyndication.com/pagead/show_ads.js',
+            'http://widget.wumii.com/ext/relatedItemsWidget',
+            'http://pagead2.googlesyndication.com/pagead/show_ads.js',
+            'http://list.qq.com/zh_CN/htmledition/js/qf/page/qfcode.js',
+            'http://www.yixieshi.com/plus/ad_js.php?aid=14',
+            'http://cpro.baidustatic.com/cpro/ui/c.js',
+            'http://s93.cnzz.com/stat.php?id=2002547&web_id=2002547'
+        ), $scriptSrcValues);
+    }    
     
     public function testGetScriptSrcValues() {
         $webPage = new WebPage();
@@ -10,7 +37,7 @@ class GetScriptValuesTest extends BaseTest {
         
         $scriptSrcValues = array();
         
-        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {            
+        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {                        
             $src = trim($domElement->getAttribute('src'));
             if ($src != '') {
                 $scriptSrcValues[] = $src;

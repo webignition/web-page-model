@@ -65,7 +65,7 @@ class WebPage extends WebResource
      *
      * @return string|null
      */
-    public function getCharacterEncoding() {        
+    public function getCharacterEncoding() {
         if (is_null($this->documentCharacterEncoding)) {
             $this->documentCharacterEncoding = $this->getWebPageParser()->getCharacterEncoding();
         }
@@ -73,7 +73,7 @@ class WebPage extends WebResource
         if (!is_null($this->documentCharacterEncoding)) {
             $this->isDocumentCharacterEncodingValid = $this->getWebPageParser()->getIsContentTypeValid();
             return strtolower($this->documentCharacterEncoding);
-        } 
+        }
         
         if ($this->getContentType()->hasParameter('charset')) {
             return $this->getContentType()->getParameter('charset')->getValue();
@@ -104,9 +104,15 @@ class WebPage extends WebResource
      * @return \QueryPath\DOMQuery 
      */
     public function find($cssSelector, $options = array()) {
+        $content = $this->getContent();
+        
+        if ($this->getCharacterEncoding() == 'gb2312') {
+            $content = iconv('GB2312', 'UTF-8', $this->getContent());
+        }
+        
         $options += array(
             'ignore_parser_warnings' => TRUE,
-            'convert_to_encoding' => 'ISO-8859-1',
+            'convert_to_encoding' => $this->getCharacterEncoding(),
             'convert_from_encoding' => 'auto',
             'use_parser' => 'html'
         );
@@ -114,7 +120,7 @@ class WebPage extends WebResource
         $currentLibxmlUseInternalErrorsValue = libxml_use_internal_errors();        
         libxml_use_internal_errors(true);
         
-        $result = new \QueryPath\DOMQuery($this->getContent(), $cssSelector, $options);
+        $result = new \QueryPath\DOMQuery($content, $cssSelector, $options);
         
         libxml_use_internal_errors($currentLibxmlUseInternalErrorsValue);
         
