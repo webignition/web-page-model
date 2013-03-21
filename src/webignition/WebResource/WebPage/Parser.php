@@ -72,6 +72,7 @@ class Parser {
     public function getCharacterEncoding() {        
         $metaContentTypeSelectors = array(
             'meta[http-equiv=Content-Type]' => true,
+            'meta[http-equiv=content-type]' => true,
             'meta[name=Content-Type]' => false // invalid but happens
         );
         

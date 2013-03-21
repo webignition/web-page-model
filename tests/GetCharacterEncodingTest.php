@@ -20,6 +20,14 @@ class GetCharacterEncodingTest extends BaseTest {
         $this->assertTrue($webPage->getIsDocumentCharacterEncodingValid());
     }
     
+    public function testGetCharacterEncodingFromLowerCaseDocumentMetaEquivElement() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
+        
+        $this->assertEquals('iso-8859-1', $webPage->getCharacterEncoding());
+        $this->assertTrue($webPage->getIsDocumentCharacterEncodingValid());
+    }    
+    
     
     public function testGetCharacterEncodingFromDocumentMetaCharsetElement() {
         $webPage = new WebPage();
