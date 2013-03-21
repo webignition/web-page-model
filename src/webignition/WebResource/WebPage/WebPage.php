@@ -75,6 +75,10 @@ class WebPage extends WebResource
             return strtolower($this->documentCharacterEncoding);
         }
         
+        if (is_null($this->getContentType())){
+            return null;
+        }
+        
         if ($this->getContentType()->hasParameter('charset')) {
             return $this->getContentType()->getParameter('charset')->getValue();
         }

@@ -28,6 +28,14 @@ class GetCharacterEncodingTest extends BaseTest {
         $this->assertTrue($webPage->getIsDocumentCharacterEncodingValid());
     }    
     
+    public function testGetCharcterEncodingWhenThereIsNone() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
+        
+        $this->assertNull($webPage->getCharacterEncoding());
+        $this->assertTrue($webPage->getIsDocumentCharacterEncodingValid());
+    }     
+    
     
     public function testGetCharacterEncodingFromDocumentMetaCharsetElement() {
         $webPage = new WebPage();
