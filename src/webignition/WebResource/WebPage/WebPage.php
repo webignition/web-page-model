@@ -116,7 +116,7 @@ class WebPage extends WebResource
         
         $options += array(
             'ignore_parser_warnings' => TRUE,
-            'convert_to_encoding' => $this->getCharacterEncoding(),
+            'convert_to_encoding' => is_null($this->getCharacterEncoding()) ? 'utf-8' : $this->getCharacterEncoding(),
             'convert_from_encoding' => 'auto',
             'use_parser' => 'html'
         );

@@ -51,6 +51,27 @@ class GetScriptValuesTest extends BaseTest {
     }
     
     
+    public function testGetScriptSrcValuesWhenNoDefinedCharacterEncoding() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html')); 
+        
+        $scriptSrcValues = array();
+        
+        $webPage->find('script')->each(function ($index, \DOMElement $domElement) use (&$scriptSrcValues) {                        
+            $src = trim($domElement->getAttribute('src'));
+            if ($src != '') {
+                $scriptSrcValues[] = $src;
+            }
+        });
+        
+        $this->assertEquals(array(
+            'css/jquery00.js',
+            'css/jquery-1.4.2.min.js',
+            'http://tw.js.webmaster.yahoo.com/470551/ystat.js'
+        ), $scriptSrcValues);
+    }    
+    
+    
     public function testGetScriptValues() {
         $webPage = new WebPage();
         $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html')); 
