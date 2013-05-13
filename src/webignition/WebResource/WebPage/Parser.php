@@ -87,11 +87,16 @@ class Parser {
                 $mediaTypeParser = new InternetMediaTypeParser();
 
                 /* @var $mediaType InternetMediaType */
-                $mediaType = $mediaTypeParser->parse($contentTypeString);
+                try {
+                    $mediaType = $mediaTypeParser->parse($contentTypeString);
 
-                if ($mediaType->hasParameter('charset')) {
-                    $this->isContentTypeValid = $isValid;
-                    return (string)$mediaType->getParameter('charset')->getValue();
+                    if ($mediaType->hasParameter('charset')) {
+                        $this->isContentTypeValid = $isValid;
+                        return (string)$mediaType->getParameter('charset')->getValue();
+                    }                    
+                } catch (\webignition\InternetMediaType\Parser\TypeParserException $typeParserException) {
+                    // Occurs when we can't parse the in-markup content type
+                    // Ignore such exceptions to treat this as having no in-markup content type
                 }
             }            
         }

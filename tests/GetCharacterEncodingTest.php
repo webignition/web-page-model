@@ -53,4 +53,12 @@ class GetCharacterEncodingTest extends BaseTest {
         $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
     }
     
+    public function testGetCharacterEncodingFromContentTypeHeaderWhenContentHasInvalidMetaEquiv() {
+        $webPage = new WebPage();
+        $webPage->setContent($this->getFixtureContent(__FUNCTION__, 'content.html'));
+        $webPage->setContentType('text/html; charset=utf-8');
+        
+        $this->assertEquals('utf-8', $webPage->getCharacterEncoding());
+        $this->assertTrue($webPage->getIsDocumentCharacterEncodingValid());        
+    }
 }
