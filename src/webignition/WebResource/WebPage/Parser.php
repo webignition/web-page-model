@@ -85,6 +85,8 @@ class Parser {
 
             if (is_string($contentTypeString)) {
                 $mediaTypeParser = new InternetMediaTypeParser();
+                $mediaTypeParser->setIgnoreInvalidAttributes(true);
+                $mediaTypeParser->setAttemptToRecoverFromInvalidInternalCharacter(true);                
 
                 /* @var $mediaType InternetMediaType */
                 try {
