@@ -1,5 +1,9 @@
 {
-    "hash": "17d3f2d22f6a4b4d3cf5700581d8b803",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "c3eb64b0bb8efec3d5243101118960e7",
     "packages": [
         {
             "name": "querypath/QueryPath",
@@ -44,16 +48,16 @@
         },
         {
             "name": "webignition/internet-media-type",
-            "version": "0.4.1.1",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/internet-media-type.git",
-                "reference": "0.4.1.1"
+                "reference": "3f4082697476cdcd150cca0b73e54a51ecfdcd82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/0.4.1.1",
-                "reference": "0.4.1.1",
+                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/3f4082697476cdcd150cca0b73e54a51ecfdcd82",
+                "reference": "3f4082697476cdcd150cca0b73e54a51ecfdcd82",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +90,7 @@
                 "media type",
                 "media-type"
             ],
-            "time": "2013-03-18 14:58:48"
+            "time": "2013-07-29 09:56:33"
         },
         {
             "name": "webignition/quoted-string",
