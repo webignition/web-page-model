@@ -133,7 +133,7 @@ class WebPage extends WebResource
      * @return \QueryPath\DOMQuery 
      */
     public function find($cssSelector, $options = array()) {
-        $content = $this->getHttpResponse()->getBody(true);
+        $content = $this->getContent();
         
         if ($this->getCharacterSet() == 'gb2312') {
             $content = iconv('GB2312', 'UTF-8', $content);

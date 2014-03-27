@@ -51,7 +51,7 @@ class Parser {
             'use_parser' => 'html'
         );     
         
-        return new \QueryPath\DOMQuery($this->webPage->getHttpResponse()->getBody(true), $cssSelector, $options);
+        return new \QueryPath\DOMQuery($this->webPage->getContent(), $cssSelector, $options);
     }
     
     /**
