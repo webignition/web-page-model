@@ -3,20 +3,112 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c3eb64b0bb8efec3d5243101118960e7",
+    "hash": "ec3b7866b7568c323d88d0be8b7bc123",
     "packages": [
         {
-            "name": "querypath/QueryPath",
-            "version": "dev-master",
+            "name": "guzzle/guzzle",
+            "version": "v3.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/technosophos/querypath.git",
-                "reference": "3.0.1"
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/technosophos/querypath/zipball/3.0.1",
-                "reference": "3.0.1",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
+                "symfony/class-loader": "*",
+                "zendframework/zend-cache": "<2.3",
+                "zendframework/zend-log": "<2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-01-28 22:29:15"
+        },
+        {
+            "name": "querypath/querypath",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/technosophos/querypath.git",
+                "reference": "e0895d54d083144548ec3d599f1e968bba2b3efc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/technosophos/querypath/zipball/e0895d54d083144548ec3d599f1e968bba2b3efc",
+                "reference": "e0895d54d083144548ec3d599f1e968bba2b3efc",
                 "shasum": ""
             },
             "require": {
@@ -44,20 +136,76 @@
                 "xml",
                 "xslt"
             ],
-            "time": "2013-03-08 17:47:48"
+            "time": "2013-05-24 02:50:10"
         },
         {
-            "name": "webignition/internet-media-type",
-            "version": "0.4.3",
+            "name": "symfony/event-dispatcher",
+            "version": "v2.4.2",
+            "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/internet-media-type.git",
-                "reference": "3f4082697476cdcd150cca0b73e54a51ecfdcd82"
+                "url": "https://github.com/symfony/EventDispatcher.git",
+                "reference": "4708b8cd41984a5ba29fe7dd40716f7f761ac501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/3f4082697476cdcd150cca0b73e54a51ecfdcd82",
-                "reference": "3f4082697476cdcd150cca0b73e54a51ecfdcd82",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/4708b8cd41984a5ba29fe7dd40716f7f761ac501",
+                "reference": "4708b8cd41984a5ba29fe7dd40716f7f761ac501",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/dependency-injection": "~2.0"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-02-11 13:52:09"
+        },
+        {
+            "name": "webignition/internet-media-type",
+            "version": "0.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/internet-media-type.git",
+                "reference": "de30f77c5e9d3584b8bdfba29dce5517f10c9ab1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/de30f77c5e9d3584b8bdfba29dce5517f10c9ab1",
+                "reference": "de30f77c5e9d3584b8bdfba29dce5517f10c9ab1",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +238,7 @@
                 "media type",
                 "media-type"
             ],
-            "time": "2013-07-29 09:56:33"
+            "time": "2013-09-05 16:34:19"
         },
         {
             "name": "webignition/quoted-string",
@@ -98,12 +246,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/quoted-string.git",
-                "reference": "0.1"
+                "reference": "43fa25f8c81eaa5aef4c2376703fe90d1449fdf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/webignition/quoted-string/zipball/0.1",
-                "reference": "0.1",
+                "url": "https://api.github.com/repos/webignition/quoted-string/zipball/43fa25f8c81eaa5aef4c2376703fe90d1449fdf8",
+                "reference": "43fa25f8c81eaa5aef4c2376703fe90d1449fdf8",
                 "shasum": ""
             },
             "require": {
@@ -131,7 +279,7 @@
                 "parser",
                 "quoted-string"
             ],
-            "time": "2012-08-15 09:52:06"
+            "time": "2012-08-15 16:52:06"
         },
         {
             "name": "webignition/string-parser",
@@ -139,12 +287,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/string-parser.git",
-                "reference": "0.2.1"
+                "reference": "a37b2b7d49da4ef6a806ad77b609033b9133bd5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/string-parser/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/webignition/string-parser/zipball/a37b2b7d49da4ef6a806ad77b609033b9133bd5d",
+                "reference": "a37b2b7d49da4ef6a806ad77b609033b9133bd5d",
                 "shasum": ""
             },
             "require": {
@@ -176,25 +324,31 @@
         },
         {
             "name": "webignition/web-resource-model",
-            "version": "0.4",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "0.4"
+                "reference": "6c971a0b6e49c96fbbe8f2c12a6e7368d268585b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/webignition/web-resource-model/zipball/0.4",
-                "reference": "0.4",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/6c971a0b6e49c96fbbe8f2c12a6e7368d268585b",
+                "reference": "6c971a0b6e49c96fbbe8f2c12a6e7368d268585b",
                 "shasum": ""
             },
             "require": {
+                "guzzle/guzzle": ">=3,<4",
                 "php": ">=5.3.0",
                 "webignition/internet-media-type": ">=0.1,<2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "symfony/class-loader": "*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
+                    "webignition\\Tests": "tests/",
                     "": "src/"
                 }
             },
@@ -214,7 +368,7 @@
                 "modem",
                 "web"
             ],
-            "time": "2012-08-16 08:16:06"
+            "time": "2014-03-27 10:59:08"
         }
     ],
     "packages-dev": [
