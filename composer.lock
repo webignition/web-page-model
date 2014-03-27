@@ -3,8 +3,76 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ec3b7866b7568c323d88d0be8b7bc123",
+    "hash": "7f29185c0fb911a97c3cf1bfa57ec0f4",
     "packages": [
+        {
+            "name": "doctrine/collections",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/b99c5c46c87126201899afe88ec490a25eedd6a2",
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Collections\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "array",
+                "collections",
+                "iterator"
+            ],
+            "time": "2014-02-03 23:07:43"
+        },
         {
             "name": "guzzle/guzzle",
             "version": "v3.8.1",
@@ -324,20 +392,21 @@
         },
         {
             "name": "webignition/web-resource-model",
-            "version": "0.5",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "6c971a0b6e49c96fbbe8f2c12a6e7368d268585b"
+                "reference": "997f648a0a468dabbc39fe7db7a9fa2521b81170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/6c971a0b6e49c96fbbe8f2c12a6e7368d268585b",
-                "reference": "6c971a0b6e49c96fbbe8f2c12a6e7368d268585b",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/997f648a0a468dabbc39fe7db7a9fa2521b81170",
+                "reference": "997f648a0a468dabbc39fe7db7a9fa2521b81170",
                 "shasum": ""
             },
             "require": {
-                "guzzle/guzzle": ">=3,<4",
+                "doctrine/collections": "~1.0",
+                "guzzle/guzzle": ">=3.8.1,<4",
                 "php": ">=5.3.0",
                 "webignition/internet-media-type": ">=0.1,<2.0"
             },
@@ -368,7 +437,7 @@
                 "modem",
                 "web"
             ],
-            "time": "2014-03-27 10:59:08"
+            "time": "2014-03-27 13:26:29"
         }
     ],
     "packages-dev": [
