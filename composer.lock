@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2f3d604e471995799726a253e22338f2",
+    "hash": "4409f03770342b1199197a1a3edfa292",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -439,16 +439,16 @@
         },
         {
             "name": "webignition/web-resource-model",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "e8b40bdb1fcd26c94a329aefdd1dc395175796fb"
+                "reference": "081f2900486478e0a871485dd2194a76c1164633"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/e8b40bdb1fcd26c94a329aefdd1dc395175796fb",
-                "reference": "e8b40bdb1fcd26c94a329aefdd1dc395175796fb",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/081f2900486478e0a871485dd2194a76c1164633",
+                "reference": "081f2900486478e0a871485dd2194a76c1164633",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +484,7 @@
                 "modem",
                 "web"
             ],
-            "time": "2014-03-27 22:53:20"
+            "time": "2014-03-27 23:36:16"
         }
     ],
     "packages-dev": [
