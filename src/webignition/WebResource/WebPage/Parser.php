@@ -16,14 +16,14 @@ class Parser {
     
     
     /**
-     * Was the detected content type provided in a valid way?
+     * Was the detected content type provided in a correct way?
      * 
      * We can detect some invalid means of specifying the content type and it's
-     * useful to know whether what was found was valid.
+     * useful to know whether what was found was formed correctly.
      *
      * @var boolean
      */
-    private $isContentTypeValid = true;
+    private $isContentTypeMalformed = null;
     
     
     /**
@@ -51,39 +51,45 @@ class Parser {
             'use_parser' => 'html'
         );     
         
-        return new \QueryPath\DOMQuery($this->webPage->getContent(), $cssSelector, $options);
+        return new \QueryPath\DOMQuery($this->webPage->getHttpResponse()->getBody(true), $cssSelector, $options);
     }
     
     /**
      *
      * @return boolean
      */
-    public function getIsContentTypeValid() {
-        return $this->isContentTypeValid;
+    public function getIsContentTypeMalformed() {
+        if (is_null($this->isContentTypeMalformed)) {
+            $this->getCharacterSet();
+        }
+        
+        return $this->isContentTypeMalformed;
     }
     
     
     /**
-     * Get the character encoding from the current web page
+     * Get the character set from the current web page
      * 
      * 
      * @return string|null
      */
-    public function getCharacterEncoding() {        
+    public function getCharacterSet() {        
+        $this->isContentTypeMalformed = false;
+        
         $metaContentTypeSelectors = array(
-            'meta[http-equiv=Content-Type]' => true,
-            'meta[http-equiv=content-type]' => true,
-            'meta[name=Content-Type]' => false // invalid but happens
+            'meta[http-equiv=Content-Type]' => false,
+            'meta[http-equiv=content-type]' => false,
+            'meta[name=Content-Type]' => true // invalid but happens
         );
         
-        foreach ($metaContentTypeSelectors as $metaContentTypeSelector => $isValid) {
+        foreach ($metaContentTypeSelectors as $metaContentTypeSelector => $isMalformed) {
             $contentTypeString = null;
 
             @$this->getDomQuery($metaContentTypeSelector)->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
                 $contentTypeString = $domElement->getAttribute('content');
             });
 
-            if (is_string($contentTypeString)) {
+            if (is_string($contentTypeString)) {                
                 $mediaTypeParser = new InternetMediaTypeParser();
                 $mediaTypeParser->setIgnoreInvalidAttributes(true);
                 $mediaTypeParser->setAttemptToRecoverFromInvalidInternalCharacter(true);                
@@ -93,7 +99,7 @@ class Parser {
                     $mediaType = $mediaTypeParser->parse($contentTypeString);
 
                     if ($mediaType->hasParameter('charset')) {
-                        $this->isContentTypeValid = $isValid;
+                        $this->isContentTypeMalformed = $isMalformed;
                         return (string)$mediaType->getParameter('charset')->getValue();
                     }                    
                 } catch (\webignition\InternetMediaType\Parser\TypeParserException $typeParserException) {

@@ -1,0 +1,81 @@
+HTTP/1.0 200 OK
+Content-Type:text/html
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="google-site-verification" content="899ODWRmetgUSVpXvqWe07L0qpDf1TnXFSV2tpcagOA" />
+
+<!--<meta name="robots" content="index,follow" />
+
+<meta name="author" content="Evervictory Acutech Corp.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" CONTENT="Copyright Evervictory Acutech Corp. All rights reserved">
+<meta name="URL" content="http://www.evacutech.com.tw">-->
+<!--<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />-->
+<!--<meta http-equiv="imagetoolbar" content="no" />-->
+
+<meta name="keywords" content="EIA481片材,表面電阻,SUFACE RESISTANCE,CONDUCTIVE POLYMER FILM">
+<meta http-equiv="refresh" content="3;url=products/p_c_esd_pet_film_en.html" />
+
+<title>Welcome to Evervictory Acutech Corp ,Conductive polymer,APET,PET,FILM,SHEET,TRAY</title>
+
+<script type="text/javascript" src="css/jquery00.js" language="javascript"></script>
+<script type="text/javascript" src="css/jquery-1.4.2.min.js" language="javascript"></script>
+
+<link type="text/css" href="css/navigation.css" rel="stylesheet"/>
+<link type="text/css" href="css/eac.css" rel="stylesheet"/>
+<link type="text/css" href="css/css.css" rel="stylesheet"/>
+<link type="text/css" href="css/menu.css" rel="stylesheet"/>
+<link type="text/css" href="css/submenu.css" rel="stylesheet"/>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22895430-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<script type="text/javascript" src="http://tw.js.webmaster.yahoo.com/470551/ystat.js"></script><noscript><a href="http://tw.webmaster.yahoo.com"><img src=http://tw.img.webmaster.yahoo.com/470551/ystats.gif></a></noscript>
+</head>
+
+<!-- Google Analytics 追蹤程式碼 -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38824986-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<body>
+<center style="display:none">
+
+	<table border="0" cellpadding="0" cellspacing="0" align="center">
+    <tr><td colspan="3" align="center" height="100"></td></tr>
+    <tr><td colspan="3" align="center"><a href="index.html" height="125" ><img src="image/eac-logo-index.jpg" alt="Evervictory Acutech Corp." /></a></td></tr>
+	<tr><td colspan="3"><img src="image/index.jpg" alt="Evervictory Acutech Corp."></td></tr>
+    <tr>
+        <td width="50" height="30" align="right" valign="bottom"><span class="index_link"><a href="http://www.evacutech.com.tw/cht/index.asp">[Chinese]</a></span></td>
+        <td width="5" align="center" valign="bottom"><span class="index_link">|</span></td>   
+        <td width="50" align="left" valign="bottom"><span class="index_link"><a href="products/p_c_esd_pet_film_en.html">[English]</a></span></td>
+	</tr>
+	</table>     
+	
+</center>
+
+</body>
+</html>

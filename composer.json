@@ -19,10 +19,16 @@
     },  
     "require": {
         "php": ">=5.3.0",
-        "webignition/web-resource-model":">=1.0,<2.0",
+        "webignition/web-resource-model":">=1.1,<2.0",
         "querypath/QueryPath": ">=3.0.0",
-        "webignition/internet-media-type":">=0.1,<1.0"
+        "webignition/internet-media-type":">=0.1,<1.0",
+        "webignition/character-set-list":">=0.2,<1.0"
     },
+    "require-dev": {
+        "symfony/class-loader": "*",
+        "phpunit/phpunit": "3.7.*",
+        "guzzle/guzzle":">=3.8.1,<4"
+    },     
     "minimum-stability":"dev",
     "prefer-stable":true
 }

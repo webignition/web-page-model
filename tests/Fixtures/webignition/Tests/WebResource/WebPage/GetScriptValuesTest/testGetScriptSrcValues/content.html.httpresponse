@@ -1,0 +1,12 @@
+HTTP/1.0 200 OK
+Content-Type:text/html
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript" src="//example.com/foo.js"></script>
+        <script type="text/javascript" src="/vendor/example/bar.js"></script>
+    </head>
+    <body>
+    </body>
+</html>

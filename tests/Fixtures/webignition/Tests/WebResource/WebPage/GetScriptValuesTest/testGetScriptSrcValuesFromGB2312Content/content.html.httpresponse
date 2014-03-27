@@ -1,0 +1,431 @@
+HTTP/1.0 200 OK
+Content-Type:text/html
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>导航之变—移动网站的导航设计_互联网的一些事</title>
+<meta name="keywords" content="交互设计,导航设计,信息和交互,手机界面" />
+<meta name="description" content="导航是互联网网站最重要的组成部分之一，它涉及到产品的信息架构、页面布局和用户交互行为等诸多方面。一个网站用户体验的优劣往往和导航的优劣有密切的联系。 随着移动互联网的发展，越来越多的网站以移动网站的形式移植到手机上。在网站移植过程中，导航的" />
+<link rel="alternate" type="application/rss+xml" href="http://feed.yixieshi.com/" title="互联网的一些事-关注互联网产品管理，交流产品设计、用户体验心得" />
+<link type="text/css" rel="stylesheet" href="/min/?f=templets/style/css.css" />
+<script type="text/javascript" src="/min/?f=images/js/j.js,include/dedeajax2.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(
+function($){
+$("img").lazyload({
+placeholder : "http://www.yixieshi.com/templets/images/grey.gif",
+effect      : "fadeIn"
+});
+});
+</script>
+</head>
+<body>
+<div class="topbar">
+	<div class="topbarcnt">
+		<div class="topbarL"><a href="http://www.yixieshi.com/">互联网的一些事</a>关注互联网产品管理，交流产品设计、用户体验心得！</div>
+		<div class="topbarR"><a href="http://www.yixieshi.com/top/index.html">资讯排行</a>|<a href="http://www.yixieshi.com/tags.php">热门标签</a>|<a href="javascript:addCookie();" _fcksavedurl="javascript:addCookie();">收藏本站</a>|<link title="互联网的一些事-关注互联网产品管理，交流产品设计、用户体验心得" type="application/rss+xml" href="http://feed.yixieshi.com/" rel="alternate" /><a href="http://feed.yixieshi.com/" target="_blank" class="rss">RSS订阅</a></div>		
+	</div>
+</div>
+
+<div class="header">
+	<div class="headBox">
+		<div class="logo"><a href="http://www.yixieshi.com">互联网的一些事</a></div>
+		<div class="search">
+			<form action="http://www.yixieshi.com/plus/search.php" name="formsearch">
+				<select name="searchtype" style="display:none;"  id="search-option">
+					<option value="titlekeyword" selected='1'>智能模糊搜索</option>
+					<option value="title">仅搜索标题</option>
+				</select>
+				<input type="hidden" name="kwtype" value="0" />
+				<input name="keyword" type="text" class="keyword" id="search-keyword" /><input name="" type="submit" class="search-submit" value="搜索" />
+			</form>
+			<div class="hottag">热门关键字：<a href='http://www.yixieshi.com/tags/%B0%D9%B6%C8%BF%D5%BC%E4.html' target="_blank">百度空间</a><a href='http://www.yixieshi.com/tags/%CA%D0%B3%A1%D3%AA%CF%FA.html' target="_blank">市场营销</a><a href='http://www.yixieshi.com/tags/%D3%C3%BB%A7.html' target="_blank">用户</a><a href='http://www.yixieshi.com/tags/%CE%A2%B2%A9%D7%EE%BC%D1%B7%A2%CC%FB%CA%B1%BC%E4.html' target="_blank">微博最佳发帖时间</a><a href='http://www.yixieshi.com/tags/%CD%C5%B6%D3%BA%CF%D7%F7%B7%BD%B7%A8.html' target="_blank">团队合作方法</a></div>
+		</div>
+	</div>
+	<div class="navbar">
+		<div class="menu"><a href='http://www.yixieshi.com/'>首页</a>|<a href='http://www.yixieshi.com/it/' >互联网新闻</a>|<a class='cut' href='http://www.yixieshi.com/ucd/' >交互设计</a>|<a href='http://www.yixieshi.com/pd/' >产品运营</a>|<a href='http://www.yixieshi.com/b2b/' >电子商务</a>|<a href='http://www.yixieshi.com/zhichang/' >职场励志</a>|<a href='http://www.yixieshi.com/hr/' >招聘信息</a>|<a href='http://www.yixieshi.com/youqu/' >有趣的事</a>|<a href='http://www.yixieshi.com/web/' >酷站欣赏</a>
+		</div>
+	</div>
+</div>
+
+
+<div class="mainBox">
+	<div class="mleft">
+		<div class="place">您的位置：<a href='http://www.yixieshi.com/'>主页</a> > <a href='http://www.yixieshi.com/ucd/'>交互设计</a> > </div>
+		<div class="articleCont">
+			<h1 class="articleTitle">导航之变—移动网站的导航设计</h1>
+			<div class="articleInfo"><small>时间:</small>2011-12-08 10:27<small>来源:</small><a href="http://mux.baidu.com/?p=1865" target="_blank">百度MUX</a> <small>作者:</small>百度MUX <small>围观:</small> 
+				<script src="http://www.yixieshi.com/plus/count.php?view=yes&aid=9935&mid=1" type='text/javascript' language="javascript"></script> 
+				次</div>
+			<div class="articleContent">
+				<script type="text/javascript">
+				/*300*250，文章正文*/
+				var cpro_id = "u1219403";
+				</script>
+				<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+				<script type="text/javascript"><!--
+				google_ad_client = "ca-pub-7587334718494634";
+				/* 文章页正文顶部 */
+				google_ad_slot = "4970379013";
+				google_ad_width = 300;
+				google_ad_height = 250;
+				//-->
+				</script>
+				<script type="text/javascript"
+				src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				</script>
+				<style> .Wnz932 { display:none; } </style>
+<p>
+	&nbsp;</p>
+<p>
+	　　导航是互联网网站最重要的组成部分之一，它涉及到产品的信息架构、页面布局和用户交互行为等诸多方面。一个网站用户体验的优劣往往和导航的优劣有密切的联系。 <font color='#FFFFFF'></font> </p>
+<p>
+	　　随着移动互联网的发展，越来越多的网站以移动网站的形式移植到手机上。在网站移植过程中，导航的重新设计有什么变化和设计要点呢，本文尝试做出一些研究。 <font color='#FFFFFF'></font> </p>
+<p>
+	<strong>　　导航的目的</strong> <span class='Wnz932'></span> </p>
+<p>
+	　　在研究导航之前，我们不妨从导航的使用目的谈起。如果把网站比成一座大厦，那导航可认作是大厦内的指引系统。导航的使用目的归纳起来主要有以下几个方面： <div class='Wnz932'></div> </p>
+<p>
+	　　1. 引导用户在网站页面间移动和浏览，提供获取信息的路径。全局导航、局部导航等都是为了用户浏览相关的页面提供引导，方便用户找到所求。 <span class='Wnz932'></span> </p>
+<p>
+	　　2. 理清网站各部分内容之间的关系，使用户了解网站全景。最常见于全局导航和站点信息导航，它们展现了整个网站的目录信息，用户可快速理解网站结构，对网站有整体的把握。 <span class='Wnz932'></span> </p>
+<p>
+	　　3. 定位用户在网站中所处的位置。这个功能常见于面包屑和相关导航中，它帮助用户识别当前浏览的页面与网站整体内容间关系，使用户了解当前页面和网站其它内容的联系和区别。 <div class='Wnz932'></div> </p>
+<p>
+	<strong>　　导航变化的原因</strong> <p class='Wnz932'></p> </p>
+<p>
+	　　从PC端到移动端导航变化的原因归根结底是由物(设备的软、硬件差异)、景(使用情景和操作方式)、事(用户需求和使用目的)差异。这些因素相互交织，对移动终端的导航设计有显著的影响。 <span class='Wnz932'></span> </p>
+<p>
+	　　本文尝试从类型、内容、样式等方面结合实例来说明PC端到移动端网站导航设计的变化： <div class='Wnz932'></div> </p>
+<p>
+	<strong>　　一、常用导航类型变化</strong> <div class='Wnz932'></div> </p>
+<p>
+	　　网页导航的划分有不同的维度。网页导航按照作用范围的不同可以分为三大类：结构性导航、关联性导航和公用程序导航。根据《web 导航设计》，三者的关系可描述如下： <p class='Wnz932'></p> </p>
+<center>
+	<img alt="" height="330" src="http://www.yixieshi.com/uploads/allimg/111208/102U21341-0.jpg" width="700" /></center>
+<p>
+	　　根据外在形式的不同，网页导航通常又可以分为顶部横向导航、侧边栏导航、Tab标签导航、面包屑导航、页内锚点导航等多种形式。 <p class='Wnz932'></p> </p>
+<p>
+	　　由于移动终端特性，移动网站可以采用的导航种类较PC端要少很多，主要有纵向导航、分类链接导航、Tab标签导航、相关导航等。 <font color='#FFFFFF'></font> </p>
+<center>
+	<img alt="" height="290" src="http://www.yixieshi.com/uploads/allimg/111208/102U24416-1.jpg" width="700" /></center>
+<p>
+	　　下面就常用的移动网页的导航形式进行一些介绍： <font color='#FFFFFF'></font> </p>
+<p>
+	<strong>　　&middot; 纵向导航</strong> <span class='Wnz932'></span> </p>
+<p>
+	　　由于移动设备更适合纵向的浏览方式，PC站点的顶部横向导航和侧边栏导航在移动端通常转变为纵向导航。例如下图dell 和hp的移动版网站设计中，均采用这种转换方式，较好地完成了导航的迁移。 <p class='Wnz932'></p> </p>
+<center>
+	<img alt="" height="534" src="http://www.yixieshi.com/uploads/allimg/111208/102U2F53-2.jpg" width="557" /></center>
+<p>
+	<strong>　　&middot; 分类链接导航</strong> <div class='Wnz932'></div> </p>
+<p>
+	　　常见的是在首页设置分类链接导航，将网站的主要模块入口放置在主页顶部。如果分类太多可以加入&ldquo;更多&rdquo;入口，在更多页面将所有分类全部展现。 图标导航是文字链接导航的衍生，它更适合在触屏手机上，方便用户用手指进行操作。 <div class='Wnz932'></div> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U242K-3.jpg" width="558" /></center>
+<p>
+	<strong>　　&middot; Tab标签导航</strong> <p class='Wnz932'></p> </p>
+<p>
+	　　支持HTML5特性的高端机型通常可以实现页面的局部刷新。通过Tab的应用，导航可以在有限的页面空间显示更多的内容。例如 Myspace顶部的导航设计：三个主导航下面各有3-4个二级导航，展现了网站的主要功能。 <font color='#FFFFFF'></font> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U22436-4.jpg" width="558" /></center>
+<p>
+	<strong>　　&middot; 相关导航</strong> <font color='#FFFFFF'></font> </p>
+<p>
+	　　相关导航一般出现在正文页，推荐与当前页面相关内容，向用户提供类似内容，提升用户粘性。例如百度知道和BBC新闻均在阅读正文页提供了与当前内容相关的推荐。 <p class='Wnz932'></p> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U26332-5.jpg" width="558" /></center>
+<p>
+	<strong>　　&middot; 页内锚点导航</strong> <div class='Wnz932'></div> </p>
+<p>
+	　　页内锚点导航是移动终端特有的导航方式之一，它可以使用户快速到达页面顶部、底部和相关板块。例如BBC在底部有返回顶部的快速链接TOP，而谷歌新闻则提供了不同板块之间快速跳转的锚点导航。 <span class='Wnz932'></span> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U26261-6.jpg" width="558" /></center>
+<p>
+	<strong>　　&middot; 面包屑导航处理策略</strong> <span class='Wnz932'></span> </p>
+<p>
+	　　面包屑作为一种有效的导航处理策略在移动端使用频率也比较多，但由于移动端屏幕横向宽度有限，通常的处理策略是：保留关键的路径，例如首页、主栏目、关键版块等;如果当前页面标题过长，可以在面包屑上以&ldquo;本文&rdquo;或者&ldquo;正文&rdquo;表示。尽量控制面包屑在一行之内显示。 <span class='Wnz932'></span> </p>
+<p>
+	<strong>　　二、导航内容的组织、缩减和隐藏</strong> <div class='Wnz932'></div> </p>
+<p>
+	<strong>　　&middot; 组织与缩减</strong> <font color='#FFFFFF'></font> </p>
+<p>
+	　　导航再设计过程中，必然有导航信息的缩减和重新组织。筛选的标准往往有： <div class='Wnz932'></div> </p>
+<p>
+	　　1)用户需求的强度，可以用pv,uv等数据进行判断。 <font color='#FFFFFF'></font> </p>
+<p>
+	　　2)与移动使用场景的契合度。例如拍照、语音等功能的入口。 <p class='Wnz932'></p> </p>
+<p>
+	　　3)用户操作便利程度。 <span class='Wnz932'></span> </p>
+<p>
+	　　其中第三点往往容易被忽视，亚马逊的移动版在PC版的基础上对导航的内容进行了合并和删减，控制了信息量，使之更适合用户在在移动终端浏览。例如将电器&amp;电脑这一条目在移动端拆分为两个条目(电器、电脑办公)，并使子项目的数目由17条缩减到7条。一定程度上也符合了移动端神奇数字7的原则。 <span class='Wnz932'></span> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U22D7-7.jpg" width="558" /></center>
+<p>
+	<strong>　　&middot; 导航内容的隐藏</strong> <p class='Wnz932'></p> </p>
+<p>
+	　　在导航内容重要性不分伯仲的情况下，常见的处理方式是将相对重要的内容展现出来，而将其它内容放入&ldquo;更多&rdquo;，用户可以点击&ldquo;更多&rdquo;在当前页面展开或跳转至更多页面。 <span class='Wnz932'></span> </p>
+<center>
+	<img alt="" height="534" src="http://www.yixieshi.com/uploads/allimg/111208/102U23350-8.jpg" width="558" /></center>
+<p>
+	<strong>　　三、导航样式的变化</strong> <font color='#FFFFFF'></font> </p>
+<p>
+	<strong>　　&middot; 利用系统特性变形</strong> <div class='Wnz932'></div> </p>
+<center>
+	<img alt="" height="439" src="http://www.yixieshi.com/uploads/allimg/111208/102U23096-9.jpg" width="558" /></center>
+<p>
+	　　常用的变形方式有： <p class='Wnz932'></p> </p>
+<p>
+	　　1) 调用系统控件 <div class='Wnz932'></div> </p>
+<p>
+	　　通过结合移动终端的控件特性，可以在较小的尺寸范围内完成导航的再设计。如上图cnet移动网站中，导航内搜索框用搜索按钮代替，二级项目改用下拉选择器，充分利用了移动端控件特性。 <p class='Wnz932'></p> </p>
+<p>
+	　　2)利用系统交互特性 <font color='#FFFFFF'></font> </p>
+<p>
+	　　Sevnthsin的首页导航设计巧妙地应用了触屏手机可拖动元素的特性。用户拖拽相应的图标到中心圆点位置即可完成导航，进入该网站。 <font color='#FFFFFF'></font> </p>
+<p>
+	<strong>　　&middot; 动态效果的变化</strong> <span class='Wnz932'></span> </p>
+<p>
+	　　Web动态导航菜单也叫浮出菜单(fly-out menu)或弹出菜单(pop-up menu),通常是鼠标悬停或者点击导航选项时出现。在PC上动态菜单一般为横向或者纵向展开。 <div class='Wnz932'></div> </p>
+<p>
+	<strong>　　在移动端：</strong> <font color='#FFFFFF'></font> </p>
+<p>
+	　　1) 低端机，不支持折叠展开效果，原网页动态菜单通常处理为列表形式。通过按键控制光标逐步移动选择每个子项目。 <font color='#FFFFFF'></font> </p>
+<p>
+	　　2) 高端机，处理成手风琴折叠(Accordion)或者层级目录形式，通过点击展开二级项目。 <font color='#FFFFFF'></font> </p>
+<p>
+	　　手风琴折叠的优点：不用跳转页面;缺点：次级展示内容有限; <p class='Wnz932'></p> </p>
+<p>
+	　　层级目录形式的优点：可以展示较多内容;缺点：需要进入下一级页面。 <p class='Wnz932'></p> </p>
+<p>
+	　　下图中亚马逊的导航采用了当前折叠展开的方式而ESPN的则采用了层级导航方式。 <div class='Wnz932'></div> </p>
+<center>
+	<img alt="" height="352" src="http://www.yixieshi.com/uploads/allimg/111208/102U234Y-10.jpg" width="558" /></center>
+<p>
+	<strong>　　四 、总结</strong> <font color='#FFFFFF'></font> </p>
+<p>
+	　　在PC端向移动端转移过程中，页面产品的导航设计要对原导航进行删减、隐藏、组织，特别要把握用户本质需求，结合产品使用场景、用户需求、软硬件特性等进行导航的再设计。 <font color='#FFFFFF'></font> </p>
+<p>
+	　　参考文献：《Web导航设计》 James Kalbach / 李曦琳 / 电子工业出版社 <div class='Wnz932'></div> </p>
+<p>
+	　　转载请注明出自&rdquo;百度MUX&rdquo; <p class='Wnz932'></p> </p>
+
+				<div class="pages">
+					<ul class="pagelist">
+						
+					</ul>
+				</div>
+				<div class="statement">
+					<p>本文链接：<a href="http://www.yixieshi.com/ucd/9935.html">http://www.yixieshi.com/ucd/9935.html</a><br />
+						关键字：<a href='http://www.yixieshi.com/tags/%BD%BB%BB%A5%C9%E8%BC%C6.html'>交互设计</a>|<a href='http://www.yixieshi.com/tags/%B5%BC%BA%BD%C9%E8%BC%C6.html'>导航设计</a>|<a href='http://www.yixieshi.com/tags/%D0%C5%CF%A2%BA%CD%BD%BB%BB%A5.html'>信息和交互</a>|<a href='http://www.yixieshi.com/tags/%CA%D6%BB%FA%BD%E7%C3%E6.html'>手机界面</a>|<br />
+						<span>若无特别注明，文章皆为<a href="http://www.yixieshi.com">互联网的一些事</a>原创，转载请注明出处</span></p>
+				</div>
+			</div>
+			<div class="shareBox"> 
+				<!-- Baidu Button BEGIN -->
+				<div id="bdshare" class="bdshare_t bds_tools_32 get-codes-bdshare" data="{'url':'http://www.yixieshi.com/ucd/9935.html?link=bdshare'}"> <a class="bds_tsina"></a> <a class="bds_tqq"></a> <a class="bds_qzone"></a> <a class="bds_t163"></a> <a class="bds_tsohu"></a> <a class="bds_renren"></a> <a class="bds_bdhome"></a> <span class="bds_more"></span> <a class="shareCount"></a> </div>
+				<!-- Baidu Button END --> 
+			</div>
+			<div class="arteditor">责任编辑：包子</div>
+			<div class="context">
+				<ul>
+					<li class="fl">上一篇：<a href='http://www.yixieshi.com/ucd/9931.html'>腾讯CDC：Q+ Web 改版设计小结</a> </li>
+					<li class="fr">下一篇：<a href='http://www.yixieshi.com/ucd/9942.html'>运用眼动研究，优化页面布局</a> </li>
+				</ul>
+			</div>
+			<div class="tags">
+				<h3>关键字：</h3>
+				<a href='http://www.yixieshi.com/tags/%BD%BB%BB%A5%C9%E8%BC%C6.html'>交互设计</a> <a href='http://www.yixieshi.com/tags/%B5%BC%BA%BD%C9%E8%BC%C6.html'>导航设计</a> <a href='http://www.yixieshi.com/tags/%D0%C5%CF%A2%BA%CD%BD%BB%BB%A5.html'>信息和交互</a> <a href='http://www.yixieshi.com/tags/%CA%D6%BB%FA%BD%E7%C3%E6.html'>手机界面</a>  </div>
+			<div class="likeart"> 
+				<!--猜你喜欢-->
+				<div class="fl cnxh">
+					<h2><strong>猜你喜欢</strong></h2>
+					<ul>
+						<li><a href="http://www.yixieshi.com/ucd/9879.html" target="_blank" title="Affordance（可供性）和设计">Affordance（可供性）和设计</a></li>
+<li><a href="http://www.yixieshi.com/ucd/10442.html" target="_blank" title="如何准确看清用户需求？">如何准确看清用户需求？</a></li>
+<li><a href="http://www.yixieshi.com/ucd/9834.html" target="_blank" title="分析设计优秀的iPhone通知">分析设计优秀的iPhone通知</a></li>
+<li><a href="http://www.yixieshi.com/ucd/12119.html" target="_blank" title="判断交互的首要标准：高效or不高效？">判断交互的首要标准：高效or不高效？</a></li>
+<li><a href="http://www.yixieshi.com/ucd/11896.html" target="_blank" title="减肥实验室：控制Flash文件的大小">减肥实验室：控制Flash文件的大小</a></li>
+<li><a href="http://www.yixieshi.com/ucd/9589.html" target="_blank" title="提高页面可访问性——朋友网无障碍优化实践">提高页面可访问性——朋友网无障碍优化实践</a></li>
+
+					</ul>
+				</div>
+				<!--猜你喜欢 end-->
+				<div class="fr xgbd">
+					<h2><strong>相关报道</strong></h2>
+					<ul>
+					<li><a href="http://www.yixieshi.com/ucd/13033.html" target="_blank" title="界面设计中的视觉隐喻手法">界面设计中的视觉隐喻手法</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13031.html" target="_blank" title="交互设计法则之接近法则与格式塔">交互设计法则之接近法则与格式塔</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13010.html" target="_blank" title="无滚动条的页面屏幕抖动现象">无滚动条的页面屏幕抖动现象</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13003.html" target="_blank" title="kentzhu：APP新手引导之殇">kentzhu：APP新手引导之殇</a></li>
+<li><a href="http://www.yixieshi.com/ucd/12994.html" target="_blank" title="产品流程体验上的前轻后重">产品流程体验上的前轻后重</a></li>
+<li><a href="http://www.yixieshi.com/ucd/12986.html" target="_blank" title="App 开发如何站在用户角度思考？">App 开发如何站在用户角度思考？</a></li>
+
+					</ul>
+				</div>
+				<!--相关报道 End-->  
+			</div>
+			<div class="related"> 
+				<script type="text/javascript" id="wumiiRelatedItems"></script> 
+				<script type="text/javascript">
+				var wumiiPermaLink = "http://www.yixieshi.com/ucd/9935.html";
+				var wumiiTitle = "导航之变—移动网站的导航设计";
+				var wumiiTags = "交互设计,导航设计,信息和交互,手机界面,";
+				var wumiiSitePrefix = "http://www.yixieshi.com/";
+				var wumiiParams = "&num=5&mode=2&pf=JAVASCRIPT";
+				</script> 
+				<script type="text/javascript" src="http://widget.wumii.com/ext/relatedItemsWidget"></script> 
+			</div>
+		</div>
+		<!-- //AJAX评论区 --> 
+		<!-- duoshuo Begin --> 
+		<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"  data-thread-key="9935" data-author-key="1"  data-url="http://www.yixieshi.com/ucd/9935.html"  data-image="http://www.yixieshi.com/uploads/allimg/111208/1_120Q030033227.jpg" data-title="导航之变—移动网站的导航设计"></div>
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name: "yixieshi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END --><div id="ds-ssr" class="mt1">
+	<dl class="tbox">
+		<dt> <strong>评论列表（网友评论仅供网友表达个人看法，并不表明本站同意其观点或证实其描述）</strong> </dt>
+		<dd>
+			<div class="dede_comment">
+				<div class="decmt-box1">
+					<ul>
+						<li id="commetcontentNew"></li>
+
+ 
+					</ul>
+				</div>
+			</div>
+		</dd>
+	</dl>
+</div>
+
+ 
+		<!-- duoshuo End -->
+		<div class="quemenu"> <strong>快捷导航：</strong><a href='http://www.yixieshi.com/it/' >互联网新闻</a><a href='http://www.yixieshi.com/ucd/' >交互设计</a><a href='http://www.yixieshi.com/pd/' >产品运营</a><a href='http://www.yixieshi.com/b2b/' >电子商务</a><a href='http://www.yixieshi.com/zhichang/' >职场励志</a><a href='http://www.yixieshi.com/hr/' >招聘信息</a><a href='http://www.yixieshi.com/youqu/' >有趣的事</a><a href='http://www.yixieshi.com/web/' >酷站欣赏</a> </div>
+	</div>
+	<!--left end-->
+	<div class="mright">
+		<div class="rBox"> 
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-7587334718494634";
+			/* 文章页右上角 */
+			google_ad_slot = "1267039472";
+			google_ad_width = 250;
+			google_ad_height = 250;
+			//-->
+			</script> 
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script> 
+		</div>
+		<div class="rBox"> 
+			<!--以下是QQ邮件列表订阅嵌入代码--><script >var nId = "50b79bb936889e26c69801c3c1b3f9bfcfebbcd7ed424782",nWidth="auto",sColor="light",sText="填写您的邮件地址，订阅精彩内容：" ;</script><script src="http://list.qq.com/zh_CN/htmledition/js/qf/page/qfcode.js" charset="gb18030"></script> 
+		</div>
+		<div class="rBox">
+			<h2 class="title">最新文章</h2>
+			<ul class="list1">
+				<li><a href="http://www.yixieshi.com/ucd/13052.html" target="_blank" title="腾讯CDC：腾讯视频 for Android 2.0设">腾讯CDC：腾讯视频 for Android 2.0设</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13051.html" target="_blank" title="专场视觉设计的5个方面">专场视觉设计的5个方面</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13039.html" target="_blank" title="经验分享：完美排版的10个基本功">经验分享：完美排版的10个基本功</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13037.html" target="_blank" title="页面优化不同于改版，如何做页面优化">页面优化不同于改版，如何做页面优化</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13033.html" target="_blank" title="界面设计中的视觉隐喻手法">界面设计中的视觉隐喻手法</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13031.html" target="_blank" title="交互设计法则之接近法则与格式塔">交互设计法则之接近法则与格式塔</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13030.html" target="_blank" title="Banner设计的三个重点：风格、排版以">Banner设计的三个重点：风格、排版以</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13028.html" target="_blank" title="广告创意中的情感因素（一）">广告创意中的情感因素（一）</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13013.html" target="_blank" title="设计中默认样式的强大威力">设计中默认样式的强大威力</a></li>
+<li><a href="http://www.yixieshi.com/ucd/13012.html" target="_blank" title="需求是可以创造，可以进化的">需求是可以创造，可以进化的</a></li>
+
+			</ul>
+		</div>
+		<script src='http://www.yixieshi.com/plus/ad_js.php?aid=14' language='javascript'></script> 
+		<!--右边内容 结束-->
+		<div class="rBox">
+			<h2 class="title">最新标签</h2>
+			<div class="taglist"> <a href='http://www.yixieshi.com/tags/%CA%D6%BB%FA%B2%FA%C6%B7.html' target="_blank">手机产品</a>  <a href='http://www.yixieshi.com/tags/%C9%E8%BC%C6%D7%DC%BD%E1.html' target="_blank">设计总结</a>  <a href='http://www.yixieshi.com/tags/%CC%DA%D1%B6%CA%D3%C6%B5.html' target="_blank">腾讯视频</a>  <a href='http://www.yixieshi.com/tags/%CD%F8%D2%B3%C9%E8%BC%C6.html' target="_blank">网页设计</a>  <a href='http://www.yixieshi.com/tags/%D7%A8%B3%A1%CA%D3%BE%F5%C9%E8%BC%C6.html' target="_blank">专场视觉设计</a>  <a href='http://www.yixieshi.com/tags/%CA%D3%BE%F5%C9%E8%BC%C6.html' target="_blank">视觉设计</a>  <a href='http://www.yixieshi.com/tags/%D3%C3%BB%A7%BC%DB%D6%B5.html' target="_blank">用户价值</a>  <a href='http://www.yixieshi.com/tags/%C9%CC%D2%B5%BC%DB%D6%B5.html' target="_blank">商业价值</a>  <a href='http://www.yixieshi.com/tags/%B6%B9%B0%EA%CD%F8.html' target="_blank">豆瓣网</a>  <a href='http://www.yixieshi.com/tags/%D1%EE%B2%AA.html' target="_blank">杨勃</a>  <a href='http://www.yixieshi.com/tags/%C0%EE%D1%E5%BA%EA.html' target="_blank">李彦宏</a>  <a href='http://www.yixieshi.com/tags/%D6%D0%B9%FA%BB%A5%C1%AA%CD%F8.html' target="_blank">中国互联网</a>  <a href='http://www.yixieshi.com/tags/%B7%F2%C6%DE%D7%E9%BA%CF.html' target="_blank">夫妻组合</a>  <a href='http://www.yixieshi.com/tags/%B0%D9%B6%C8.html' target="_blank">百度</a>  <a href='http://www.yixieshi.com/tags/%CB%D1%CB%F7%D2%FD%C7%E6.html' target="_blank">搜索引擎</a>  <a href='http://www.yixieshi.com/tags/Google.html' target="_blank">Google</a>  <a href='http://www.yixieshi.com/tags/%D4%AA%CF%FC%CD%BF%D1%BB.html' target="_blank">元宵涂鸦</a>  <a href='http://www.yixieshi.com/tags/%B2%FA%C6%B7%C9%E8%BC%C6.html' target="_blank">产品设计</a>  <a href='http://www.yixieshi.com/tags/%B2%FA%C6%B7%D4%CB%D3%AA.html' target="_blank">产品运营</a>  <a href='http://www.yixieshi.com/tags/%C9%CC%D2%B5%C4%A3%CA%BD.html' target="_blank">商业模式</a>  <a href='http://www.yixieshi.com/tags/%B2%FA%C6%B7%CD%C6%B9%E3.html' target="_blank">产品推广</a>  <a href='http://www.yixieshi.com/tags/%D3%C3%BB%A7%D4%CB%D3%AA.html' target="_blank">用户运营</a>  <a href='http://www.yixieshi.com/tags/app%B8%B6%B7%D1.html' target="_blank">app付费</a>  <a href='http://www.yixieshi.com/tags/%B2%CC%CE%C4%CA%A4.html' target="_blank">蔡文胜</a>  <a href='http://www.yixieshi.com/tags/%B2%DD%B8%F9%D5%BE%B3%A4.html' target="_blank">草根站长</a>  <a href='http://www.yixieshi.com/tags/%C0%EE%D0%CB%C6%BD.html' target="_blank">李兴平</a>  <a href='http://www.yixieshi.com/tags/%B0%AE%C7%E9%C6%F0%B2%BD%BC%DB.html' target="_blank">爱情起步价</a>  <a href='http://www.yixieshi.com/tags/%BB%E9%C1%B5%B5%F7%B2%E9.html' target="_blank">婚恋调查</a>  <a href='http://www.yixieshi.com/tags/%C4%D0%C5%AE%BB%E9%C1%B5%B9%DB%B5%F7%D1%D0%B1%A8%B8%E6.html' target="_blank">男女婚恋观调研报告</a>  <a href='http://www.yixieshi.com/tags/%D0%E8%C7%F3%B7%D6%CE%F6.html' target="_blank">需求分析</a> </div>
+		</div>
+		<!--tag 结束-->
+		<!--关注我们-->
+		<div class="rBox">
+	<h2 class="title">还可以这样关注我们</h2>
+	<ul class="slide_share">
+		<li class="share_sina">
+			<p><a href="http://e.weibo.com/yixieshi" target="_blank">新浪微博<span>超过50,000名粉丝关注我们</span></a></p>
+		</li>
+		<li class="share_tencent">
+			<p><a href="http://t.qq.com/yixieshi" target="_blank">腾讯微博<span>超过20,000名粉丝收听我们</span></a></p>
+		</li>
+		<li class="share_rss">
+			<p><a href="http://feed.yixieshi.com/" target="_blank">RSS订阅<span>全文输出，可使用各种阅读器订阅</span></a></p>
+		</li>
+		<li class="share_mail last">
+			<p><a href="http://list.qq.com/cgi-bin/qf_invite?id=8060c2cdd1cc4596df65916e01e77feae8d91e151386ef49" target="_blank">邮箱订阅<span>每日最炫产品和趋势送到您面前</span></a></p>
+		</li>
+		<li class="weixin"></li>
+	</ul>
+</div>
+
+		<!--右边内容 结束--> 
+	</div>
+	<!--右边内容 结束-->
+	<div><script type="text/javascript">
+		/*960*90，创建于2013-2-24*/
+		var cpro_id = "u1219394";
+		</script>
+		<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+	</div>
+</div>
+<!-- totop BEGIN -->
+<div id="totop" class="totop"><span>返回顶部</span></div>
+<script type="text/javascript">
+	$(window).scroll(function () {
+        var dt = $(document).scrollTop();
+        var wt = $(window).height();
+        if (dt <= 0) {
+            $("#totop").hide();
+            return;
+        }
+        $("#totop").show();
+        if ($.browser.msie && $.browser.version == 6.0) {//IE6返回顶部
+            $("#totop").css("top", wt + dt - 110 + "px");
+        }
+    });
+    $("#totop").click(function () { $("html,body").animate({ scrollTop: 0 }, 200) });
+</script> 
+<!-- Baidu Button BEGIN --> 
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6500470" ></script> 
+<script type="text/javascript" id="bdshell_js"></script> 
+<script type="text/javascript">
+var bds_config={
+	"bdText":"「导航之变—移动网站的导航设计」——导航是互联网网站最重要的组成部分之一，它涉及到产品的信息架构、页面布局和用户交互行为等诸多方面。一个网站用户体验的优劣往往和导航的优劣有密切的联系。 随着移动互联网的发展，越来越多的网站以移动网站的形式移植到手…",
+	"wbUid":"1577794853",
+	"bdComment":"导航是互联网网站最重要的组成部分之一，它涉及到产品的信息架构、页面布局和用户交互行为等诸多方面。一个…",
+	"snsKey":{'tsina':'572572056','tqq':'801065493','t163':'KHChhBRLNj1nP8kG','tsohu':'PqgKVZS3X6CpdjMH'}
+	}
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script> 
+<!-- Baidu Button END --> 
+<div class="footer">
+	<p><a href='http://www.yixieshi.com/'>网站首页</a>|<a href="http://www.yixieshi.com/tags.php">TAG标签</a>|<a href="http://www.yixieshi.com/data/sitemap.html">网站地图</a>|<a href="http://feed.yixieshi.com/">RSS订阅</a>|<a href="http://www.yixieshi.com/about/mianze.html">免责声明</a>|<a href="http://www.yixieshi.com/plus/flink.php" target="_blank">友情链接</a></p>
+	<p>Copyright &copy; 2009-2011 YiXieShi. 互联网的一些事 版权所有 <script src="http://s93.cnzz.com/stat.php?id=2002547&web_id=2002547" language="JavaScript"></script><script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src=" + _bdhmProtocol + "hm.baidu.com/h.js%3F56cf68a081c003605dc19f09401a2f2c type=text/javascript%3E%3C/script%3E"));
+</script></p>
+	<p>粤ICP备09139612号 投稿/联系：8852190@qq.com（注明来自一些事）</p>
+</div>
+
+ 
+<!-- /footer -->
+</body>
+</html>
