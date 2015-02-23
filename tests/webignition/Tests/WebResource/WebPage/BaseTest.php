@@ -3,6 +3,8 @@
 namespace webignition\Tests\WebResource\WebPage;
 
 use webignition\WebResource\WebPage\WebPage;
+use GuzzleHttp\Message\MessageFactory as HttpMessageFactory;
+use GuzzleHttp\Message\ResponseInterface as HttpResponse;
 
 abstract class BaseTest extends \PHPUnit_Framework_TestCase {
     
@@ -46,10 +48,10 @@ const FIXTURES_DATA_RELATIVE_PATH = '/../../../../Fixtures';
      * 
      * @param string $testName
      * @param string $fixtureName
-     * @return \Guzzle\Http\Message\Response
+     * @return HttpResponse
      */
     protected function getHttpResponseFixture($testName, $fixtureName) {
-        return \Guzzle\Http\Message\Response::fromMessage($this->getFixtureContent($testName, $fixtureName));
+        return $this->getHttpResponseFromMessage($this->getFixtureContent($testName, $fixtureName));
     }
     
     
@@ -63,10 +65,15 @@ const FIXTURES_DATA_RELATIVE_PATH = '/../../../../Fixtures';
     private function getFixtureContentPath($testName, $fixtureName) {
         return $this->getFixturesDataPath($testName) . '/' . $fixtureName;
     }
-    
-    
-    protected function get() {
-        
+
+
+    /**
+     * @param $message
+     * @return HttpResponse
+     */
+    protected function getHttpResponseFromMessage($message) {
+        $factory = new HttpMessageFactory();
+        return $factory->fromMessage($message);
     }
     
     
