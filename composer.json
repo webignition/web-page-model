@@ -26,8 +26,8 @@
         ]
     },
     "require": {
-        "php": ">=5.5.0",
-        "webignition/web-resource-model":">=1.2.1,<2.0",
+        "php": ">=5.6.0",
+        "webignition/web-resource-model":"dev-master#daf56dcd4044fb20c12202adbbb9c19dd619555c",
         "querypath/QueryPath": ">=3.0.0",
         "webignition/internet-media-type":">=0.1,<1.0",
         "webignition/character-set-list":">=0.2,<1.0"
