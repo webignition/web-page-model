@@ -2,10 +2,12 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
+use QueryPath\Exception as QueryPathException;
 use GuzzleHttp\Message\ResponseInterface;
 use Mockery\MockInterface;
 use PHPUnit_Framework_TestCase;
 use webignition\WebResource\WebPage\WebPage;
+use webignition\WebResource\Exception as WebResourceException;
 
 class WebPageTest extends PHPUnit_Framework_TestCase
 {
@@ -27,6 +29,12 @@ class WebPageTest extends PHPUnit_Framework_TestCase
      * @dataProvider findDataProvider
      *
      * @param ResponseInterface $httpResponse
+     * @param string $selector
+     * @param mixed $eachFunction
+     * @param array $expectedFoundValues
+     *
+     * @throws QueryPathException
+     * @throws WebResourceException
      */
     public function testFind(ResponseInterface $httpResponse, $selector, $eachFunction, $expectedFoundValues)
     {
@@ -96,6 +104,17 @@ class WebPageTest extends PHPUnit_Framework_TestCase
                     'var firstFromBody = true;',
                 ],
             ],
+            'script values from charset=big5 content' => [
+                'httpResponse' => $this->createHttpResponse(
+                    'text/html',
+                    'document-with-big5-charset.html'
+                ),
+                'selector' => 'script',
+                'eachFunction' => function (\DOMElement $domElement) {
+                    return trim($domElement->nodeValue);
+                },
+                'expectedFoundValues' => [],
+            ],
         ];
     }
 
@@ -104,6 +123,9 @@ class WebPageTest extends PHPUnit_Framework_TestCase
      *
      * @param ResponseInterface $httpResponse
      * @param string $expectedCharacterSet
+     *
+     * @throws QueryPathException
+     * @throws WebResourceException
      */
     public function testGetCharacterSet(ResponseInterface $httpResponse, $expectedCharacterSet)
     {
@@ -149,6 +171,9 @@ class WebPageTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @throws QueryPathException
+     */
     public function testGetDocumentCharacterSetIsNullByDefault()
     {
         $this->assertNull($this->webPage->getDocumentCharacterSet());
@@ -159,6 +184,9 @@ class WebPageTest extends PHPUnit_Framework_TestCase
      *
      * @param ResponseInterface $httpResponse
      * @param string $expectedCharacterSet
+     *
+     * @throws QueryPathException
+     * @throws WebResourceException
      */
     public function testGetDocumentCharacterSet(ResponseInterface $httpResponse, $expectedCharacterSet)
     {
@@ -209,6 +237,8 @@ class WebPageTest extends PHPUnit_Framework_TestCase
      *
      * @param ResponseInterface $httpResponse
      * @param bool $expectedIsMalformed
+     *
+     * @throws WebResourceException
      */
     public function testGetDocumentCharacterSetDefinitionIsMalformed(
         ResponseInterface $httpResponse,
@@ -261,6 +291,8 @@ class WebPageTest extends PHPUnit_Framework_TestCase
      *
      * @param ResponseInterface $httpResponse
      * @param $expectedHttpResponseCharacterSet
+     *
+     * @throws WebResourceException
      */
     public function testGetHttpResponseCharacterSet(ResponseInterface $httpResponse, $expectedHttpResponseCharacterSet)
     {

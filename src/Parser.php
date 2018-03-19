@@ -3,6 +3,7 @@
 namespace webignition\WebResource\WebPage;
 
 use QueryPath\DOMQuery;
+use QueryPath\Exception as QueryPathException;
 use webignition\InternetMediaType\Parser\Parser as InternetMediaTypeParser;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaType\Parser\TypeParserException;
@@ -20,7 +21,7 @@ class Parser
      * We can detect some invalid means of specifying the content type and it's
      * useful to know whether what was found was formed correctly.
      *
-     * @var boolean
+     * @var bool
      */
     private $isContentTypeMalformed = null;
 
@@ -41,6 +42,8 @@ class Parser
      * @param array $options
      *
      * @return DOMQuery
+     *
+     * @throws QueryPathException
      */
     public function getDomQuery($cssSelector, $options = array())
     {
@@ -55,7 +58,7 @@ class Parser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsContentTypeMalformed()
     {
@@ -70,6 +73,8 @@ class Parser
      * Get the character set from the current web page
      *
      * @return string|null
+     *
+     * @throws QueryPathException
      */
     public function getCharacterSet()
     {

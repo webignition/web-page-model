@@ -1,20 +1,31 @@
 <?php
+
 namespace webignition\WebResource\WebPage;
 
 use QueryPath\DOMQuery;
+use QueryPath\Exception as QueryPathException;
+use webignition\CharacterSetList\CharacterSetList;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\WebResource\WebResource;
+use webignition\WebResource\Exception as WebResourceException;
 
 /**
  * Models a web page
  */
 class WebPage extends WebResource
 {
+    const CHARSET_GB2312 = 'GB2312';
+    const CHARSET_BIG5 = 'BIG5';
+    const CHARSET_UTF_8 = 'UTF-8';
+
     /**
      * @var Parser
      */
     private $parser;
 
+    /**
+     * @throws WebResourceException
+     */
     public function __construct()
     {
         $validContentTypes = array(
@@ -39,6 +50,8 @@ class WebPage extends WebResource
      *  - http response character set
      *
      * @return string|null
+     *
+     * @throws QueryPathException
      */
     public function getCharacterSet()
     {
@@ -55,6 +68,8 @@ class WebPage extends WebResource
 
     /**
      * @return string
+     *
+     * @throws \QueryPath\Exception
      */
     public function getDocumentCharacterSet()
     {
@@ -62,7 +77,9 @@ class WebPage extends WebResource
     }
 
     /**
-     * @return boolean
+     * @return bool
+     *
+     * @throws QueryPathException
      */
     private function hasDocumentCharacterSet()
     {
@@ -70,7 +87,7 @@ class WebPage extends WebResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function hasHttpResponseCharacterSet()
     {
@@ -80,17 +97,17 @@ class WebPage extends WebResource
     /**
      * @param string $characterSet
      *
-     * @return boolean
+     * @return bool
      */
     private function isValidCharacterSet($characterSet)
     {
-        $characterSetList = new \webignition\CharacterSetList\CharacterSetList();
+        $characterSetList = new CharacterSetList();
 
         return $characterSetList->contains($characterSet);
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDocumentCharacterSetDefinitionIsMalformed()
     {
@@ -127,14 +144,12 @@ class WebPage extends WebResource
      * @param array $options
      *
      * @return DOMQuery
+     *
+     * @throws QueryPathException
      */
     public function find($cssSelector, $options = array())
     {
-        $content = $this->getContent();
-
-        if ($this->getCharacterSet() == 'gb2312') {
-            $content = iconv('GB2312', 'UTF-8', $content);
-        }
+        $content = $this->convertToReadableCharacterSet($this->getContent());
 
         $options += array(
             'ignore_parser_warnings' => true,
@@ -151,5 +166,27 @@ class WebPage extends WebResource
         libxml_use_internal_errors($currentLibxmlUseInternalErrorsValue);
 
         return $result;
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     *
+     * @throws QueryPathException
+     */
+    private function convertToReadableCharacterSet($content)
+    {
+        $comparatorCharacterSet = strtoupper($this->getCharacterSet());
+
+        if (self::CHARSET_GB2312 === $comparatorCharacterSet) {
+            $content = iconv(self::CHARSET_GB2312, self::CHARSET_UTF_8, $content);
+        }
+
+        if (self::CHARSET_BIG5 === $comparatorCharacterSet) {
+            $content = iconv(self::CHARSET_BIG5, self::CHARSET_UTF_8, $content);
+        }
+
+        return $content;
     }
 }
