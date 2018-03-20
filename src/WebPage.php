@@ -2,18 +2,22 @@
 
 namespace webignition\WebResource\WebPage;
 
+use Psr\Http\Message\ResponseInterface;
 use QueryPath\DOMQuery;
 use QueryPath\Exception as QueryPathException;
 use webignition\CharacterSetList\CharacterSetList;
-use webignition\InternetMediaType\InternetMediaType;
 use webignition\WebResource\WebResource;
-use webignition\WebResource\Exception as WebResourceException;
 
 /**
  * Models a web page
  */
 class WebPage extends WebResource
 {
+    const CONTENT_TYPE_TEXT_HTML = 'text/html';
+    const CONTENT_TYPE_APPLICATION_XML = 'application/xml';
+    const CONTENT_TYPE_TEXT_XML = 'text/xml';
+    const APPLICATION_XML_SUB_CONTENT_TYPE_PATTERN = '/application\/[a-z]+\+xml/';
+
     const CHARSET_GB2312 = 'GB2312';
     const CHARSET_BIG5 = 'BIG5';
     const CHARSET_UTF_8 = 'UTF-8';
@@ -24,24 +28,30 @@ class WebPage extends WebResource
     private $parser;
 
     /**
-     * @throws WebResourceException
+     * @param ResponseInterface $response
+     * @param string|null $url
+     *
+     * @throws InvalidContentTypeException
      */
-    public function __construct()
+    public function __construct(ResponseInterface $response, $url = null)
     {
-        $validContentTypes = array(
-            'text/html',
-            'application/xhtml+xml',
-            'application/xml'
-        );
+        parent::__construct($response, $url);
 
-        foreach ($validContentTypes as $validContentTypeString) {
-            list($type, $subType) = explode('/', $validContentTypeString);
-            $mediaType = new InternetMediaType();
-            $mediaType->setType($type);
-            $mediaType->setSubtype($subType);
+        $contentType = $this->getContentType();
+        $contentTypeSubtypeString = $contentType->getTypeSubtypeString();
 
-            $this->addValidContentType($mediaType);
+        $hasTextHtmlContentType = self::CONTENT_TYPE_TEXT_HTML === $contentTypeSubtypeString;
+        $hasApplicationXmlContentType = self::CONTENT_TYPE_APPLICATION_XML === $contentTypeSubtypeString;
+        $hasTextXmlContentType = self::CONTENT_TYPE_TEXT_XML === $contentTypeSubtypeString;
+
+        if (!$hasTextHtmlContentType && !$hasApplicationXmlContentType && !$hasTextXmlContentType) {
+            if (0 === preg_match(self::APPLICATION_XML_SUB_CONTENT_TYPE_PATTERN, $contentTypeSubtypeString)) {
+                throw new InvalidContentTypeException($contentType);
+            }
         }
+
+        $this->parser = new Parser();
+        $this->parser->setWebPage($this);
     }
 
     /**
@@ -59,8 +69,8 @@ class WebPage extends WebResource
             return $this->getDocumentCharacterSet();
         }
 
-        if ($this->hasHttpResponseCharacterSet() && $this->isValidCharacterSet($this->getHttpResponseCharacterSet())) {
-            return $this->getHttpResponseCharacterSet();
+        if ($this->hasResponseCharacterSet() && $this->isValidCharacterSet($this->getResponseCharacterSet())) {
+            return $this->getResponseCharacterSet();
         }
 
         return null;
@@ -73,7 +83,7 @@ class WebPage extends WebResource
      */
     public function getDocumentCharacterSet()
     {
-        return $this->getWebPageParser()->getCharacterSet();
+        return $this->parser->getCharacterSet();
     }
 
     /**
@@ -89,9 +99,9 @@ class WebPage extends WebResource
     /**
      * @return bool
      */
-    private function hasHttpResponseCharacterSet()
+    private function hasResponseCharacterSet()
     {
-        return !is_null($this->getHttpResponseCharacterSet());
+        return !is_null($this->getResponseCharacterSet());
     }
 
     /**
@@ -111,32 +121,21 @@ class WebPage extends WebResource
      */
     public function getDocumentCharacterSetDefinitionIsMalformed()
     {
-        return $this->getWebPageParser()->getIsContentTypeMalformed();
+        return $this->parser->getIsContentTypeMalformed();
     }
 
     /**
      * @return string|null
      */
-    public function getHttpResponseCharacterSet()
+    public function getResponseCharacterSet()
     {
-        if (!$this->getContentType()->hasParameter('charset')) {
+        $contentType = $this->getContentType();
+
+        if (!$contentType->hasParameter('charset')) {
             return null;
         }
 
-        return $this->getContentType()->getParameter('charset')->getValue();
-    }
-
-    /**
-     * @return Parser
-     */
-    private function getWebPageParser()
-    {
-        if (is_null($this->parser)) {
-            $this->parser = new Parser();
-            $this->parser->setWebPage($this);
-        }
-
-        return $this->parser;
+        return $contentType->getParameter('charset')->getValue();
     }
 
     /**
@@ -147,7 +146,7 @@ class WebPage extends WebResource
      *
      * @throws QueryPathException
      */
-    public function find($cssSelector, $options = array())
+    public function find($cssSelector, $options = [])
     {
         $content = $this->convertToReadableCharacterSet($this->getContent());
 

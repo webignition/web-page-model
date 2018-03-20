@@ -59,6 +59,8 @@ class Parser
 
     /**
      * @return bool
+     *
+     * @throws QueryPathException
      */
     public function getIsContentTypeMalformed()
     {
@@ -120,16 +122,9 @@ class Parser
             $charsetString = $domElement->getAttribute('charset');
         });
 
-        if (is_string($charsetString) && $charsetString !== '') {
+        if (!empty($charsetString)) {
             return $charsetString;
         }
-
-        $contentTypeString = null;
-        @$this->getDomQuery(
-            'meta[name=Content-Type]'
-        )->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
-            $contentTypeString = $domElement->getAttribute('content');
-        });
 
         return null;
     }

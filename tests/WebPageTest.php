@@ -2,47 +2,118 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
+use Mockery;
+use Mockery\Mock;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use QueryPath\Exception as QueryPathException;
-use GuzzleHttp\Message\ResponseInterface;
-use Mockery\MockInterface;
 use PHPUnit_Framework_TestCase;
+use webignition\Tests\WebResource\WebPage\Factory\ResponseFactory;
+use webignition\WebResource\WebPage\InvalidContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
-use webignition\WebResource\Exception as WebResourceException;
+use webignition\WebResource\WebResource;
 
 class WebPageTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @dataProvider createInvalidContentTypeDataProvider
      *
-     * @var WebPage
+     * @param ResponseInterface $response
+     * @param string $expectedExceptionMessage
+     * @param string $expectedExceptionContentType
      */
-    private $webPage;
+    public function testCreateInvalidContentType(
+        ResponseInterface $response,
+        $expectedExceptionMessage,
+        $expectedExceptionContentType
+    ) {
+        try {
+            new WebPage($response);
+            $this->fail(InvalidContentTypeException::class. 'not thrown');
+        } catch (InvalidContentTypeException $invalidContentTypeException) {
+            $this->assertEquals(InvalidContentTypeException::CODE, $invalidContentTypeException->getCode());
+            $this->assertEquals($expectedExceptionMessage, $invalidContentTypeException->getMessage());
+            $this->assertEquals($expectedExceptionContentType, (string)$invalidContentTypeException->getContentType());
+        }
+    }
 
     /**
-     * @inheritdoc
+     * @return array
      */
-    protected function setUp()
+    public function createInvalidContentTypeDataProvider()
     {
-        $this->webPage = new WebPage();
+        return [
+            'text/plain' => [
+                'response' => ResponseFactory::create('', 'text/plain'),
+                'expectedExceptionMessage' => 'Invalid content type: "text/plain"',
+                'expectedExceptionContentType' => 'text/plain',
+            ],
+            'application/json' => [
+                'response' => ResponseFactory::create('', 'application/json'),
+                'expectedExceptionMessage' => 'Invalid content type: "application/json"',
+                'expectedExceptionContentType' => 'application/json',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createValidContentTypeDataProvider
+     *
+     * @param ResponseInterface $response
+     * @param string $expectedContentTypeString
+     *
+     * @throws InvalidContentTypeException
+     */
+    public function testCreateValidContentType(ResponseInterface $response, $expectedContentTypeString)
+    {
+        $webPage = new WebPage($response);
+
+        $this->assertEquals($expectedContentTypeString, (string)$webPage->getContentType());
+    }
+
+    /**
+     * @return array
+     */
+    public function createValidContentTypeDataProvider()
+    {
+        return [
+            'text/html' => [
+                'response' => ResponseFactory::create('', 'text/html'),
+                'expectedContentTypeString' => 'text/html',
+            ],
+            'text/xml' => [
+                'response' => ResponseFactory::create('', 'text/xml'),
+                'expectedContentTypeString' => 'text/xml',
+            ],
+            'application/xml' => [
+                'response' => ResponseFactory::create('', 'application/xml'),
+                'expectedContentTypeString' => 'application/xml',
+            ],
+            'application/xhtml+xml' => [
+                'response' => ResponseFactory::create('', 'application/xhtml+xml'),
+                'expectedContentTypeString' => 'application/xhtml+xml',
+            ],
+        ];
     }
 
     /**
      * @dataProvider findDataProvider
      *
-     * @param ResponseInterface $httpResponse
+     * @param ResponseInterface $response
      * @param string $selector
      * @param mixed $eachFunction
      * @param array $expectedFoundValues
      *
      * @throws QueryPathException
-     * @throws WebResourceException
+     * @throws InvalidContentTypeException
      */
-    public function testFind(ResponseInterface $httpResponse, $selector, $eachFunction, $expectedFoundValues)
+    public function testFind(ResponseInterface $response, $selector, $eachFunction, $expectedFoundValues)
     {
-        $this->webPage->setHttpResponse($httpResponse);
-        $foundValues = array();
+        $webPage = new WebPage($response);
 
-        $this
-            ->webPage
+        $foundValues = [];
+
+        $webPage
             ->find($selector)
             ->each(function ($index, \DOMElement $domElement) use (&$foundValues, $eachFunction) {
                 $foundValues[] = call_user_func($eachFunction, $domElement);
@@ -66,7 +137,7 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     {
         return [
             'script src values' => [
-                'httpResponse' => $this->createHttpResponse('text/html', 'document-with-script-elements.html'),
+                'response' => ResponseFactory::createFromFixture('document-with-script-elements.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->getAttribute('src'));
@@ -78,7 +149,7 @@ class WebPageTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'script values' => [
-                'httpResponse' => $this->createHttpResponse('text/html', 'document-with-script-elements.html'),
+                'response' => ResponseFactory::createFromFixture('document-with-script-elements.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -90,10 +161,7 @@ class WebPageTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'script values from charset=gb2313 content' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
-                    'document-with-script-elements-charset=gb2312.html'
-                ),
+                'response' => ResponseFactory::createFromFixture('document-with-script-elements-charset=gb2312.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -105,10 +173,7 @@ class WebPageTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'script values from charset=big5 content' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
-                    'document-with-big5-charset.html'
-                ),
+                'response' => ResponseFactory::createFromFixture('document-with-big5-charset.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -121,17 +186,17 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getCharacterSetDataProvider
      *
-     * @param ResponseInterface $httpResponse
+     * @param ResponseInterface $response
      * @param string $expectedCharacterSet
      *
+     * @throws InvalidContentTypeException
      * @throws QueryPathException
-     * @throws WebResourceException
      */
-    public function testGetCharacterSet(ResponseInterface $httpResponse, $expectedCharacterSet)
+    public function testGetCharacterSet(ResponseInterface $response, $expectedCharacterSet)
     {
-        $this->webPage->setHttpResponse($httpResponse);
+        $webPage = new WebPage($response);
 
-        $this->assertEquals($expectedCharacterSet, $this->webPage->getCharacterSet());
+        $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
     }
 
     /**
@@ -141,58 +206,44 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     {
         return [
             'get from http response when missing in document meta' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html; charset=utf-8',
-                    'empty-document.html'
+                'response' => ResponseFactory::createFromFixture(
+                    'empty-document.html',
+                    'text/html; charset=utf-8'
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'get from http response when invalid in document meta' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html; charset=utf-8',
-                    'empty-document-with-invalid-meta-charset.html'
+                'response' => ResponseFactory::createFromFixture(
+                    'empty-document-with-invalid-meta-charset.html',
+                    'text/html; charset=utf-8'
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'get from document meta when missing in http response' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
-                    'empty-document-with-valid-meta-charset.html'
-                ),
+                'response' => ResponseFactory::createFromFixture('empty-document-with-valid-meta-charset.html'),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'get when missing in document and http response' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
-                    'empty-document.html'
-                ),
+                'response' => ResponseFactory::createFromFixture('empty-document.html'),
                 'expectedCharacterSet' => null,
             ],
         ];
     }
 
     /**
-     * @throws QueryPathException
-     */
-    public function testGetDocumentCharacterSetIsNullByDefault()
-    {
-        $this->assertNull($this->webPage->getDocumentCharacterSet());
-    }
-
-    /**
      * @dataProvider getDocumentCharacterSetDataProvider
      *
-     * @param ResponseInterface $httpResponse
+     * @param ResponseInterface $response
      * @param string $expectedCharacterSet
      *
+     * @throws InvalidContentTypeException
      * @throws QueryPathException
-     * @throws WebResourceException
      */
-    public function testGetDocumentCharacterSet(ResponseInterface $httpResponse, $expectedCharacterSet)
+    public function testGetDocumentCharacterSet(ResponseInterface $response, $expectedCharacterSet)
     {
-        $this->webPage->setHttpResponse($httpResponse);
+        $webPage = new WebPage($response);
 
-        $this->assertEquals($expectedCharacterSet, $this->webPage->getDocumentCharacterSet());
+        $this->assertEquals($expectedCharacterSet, $webPage->getDocumentCharacterSet());
     }
 
     /**
@@ -202,29 +253,25 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     {
         return [
             'meta charset' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-meta-charset.html'
                 ),
                 'expectedCharset' => 'utf-8',
             ],
             'meta http-equiv content type charset' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-http-equiv-content-type.html'
                 ),
                 'expectedCharset' => 'utf-8',
             ],
             'meta http-equiv content type charset lowercase' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-http-equiv-content-type-lowercase.html'
                 ),
                 'expectedCharset' => 'utf-8',
             ],
             'meta http-equiv content type charset malformed' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-malformed-http-equiv-content-type.html'
                 ),
                 'expectedCharset' => 'utf-8',
@@ -235,18 +282,18 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getDocumentCharacterSetDefinitionIsMalformedDataProvider
      *
-     * @param ResponseInterface $httpResponse
+     * @param ResponseInterface $response
      * @param bool $expectedIsMalformed
      *
-     * @throws WebResourceException
+     * @throws InvalidContentTypeException
      */
     public function testGetDocumentCharacterSetDefinitionIsMalformed(
-        ResponseInterface $httpResponse,
+        ResponseInterface $response,
         $expectedIsMalformed
     ) {
-        $this->webPage->setHttpResponse($httpResponse);
+        $webPage = new WebPage($response);
 
-        $this->assertEquals($expectedIsMalformed, $this->webPage->getDocumentCharacterSetDefinitionIsMalformed());
+        $this->assertEquals($expectedIsMalformed, $webPage->getDocumentCharacterSetDefinitionIsMalformed());
     }
 
     /**
@@ -256,29 +303,25 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     {
         return [
             'meta charset' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-meta-charset.html'
                 ),
                 'expectedIsMalformed' => false,
             ],
             'meta http-equiv content type charset' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-http-equiv-content-type.html'
                 ),
                 'expectedIsMalformed' => false,
             ],
             'meta http-equiv content type charset lowercase' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-valid-http-equiv-content-type-lowercase.html'
                 ),
                 'expectedIsMalformed' => false,
             ],
             'meta http-equiv content type charset malformed' => [
-                'httpResponse' => $this->createHttpResponse(
-                    'text/html',
+                'response' => ResponseFactory::createFromFixture(
                     'empty-document-with-malformed-http-equiv-content-type.html'
                 ),
                 'expectedIsMalformed' => true,
@@ -289,15 +332,16 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getHttpResponseCharacterSetDataProvider
      *
-     * @param ResponseInterface $httpResponse
+     * @param ResponseInterface $response
      * @param $expectedHttpResponseCharacterSet
      *
-     * @throws WebResourceException
+     * @throws InvalidContentTypeException
      */
-    public function testGetHttpResponseCharacterSet(ResponseInterface $httpResponse, $expectedHttpResponseCharacterSet)
+    public function testGetHttpResponseCharacterSet(ResponseInterface $response, $expectedHttpResponseCharacterSet)
     {
-        $this->webPage->setHttpResponse($httpResponse);
-        $this->assertEquals($expectedHttpResponseCharacterSet, $this->webPage->getHttpResponseCharacterSet());
+        $webPage = new WebPage($response);
+
+        $this->assertEquals($expectedHttpResponseCharacterSet, $webPage->getResponseCharacterSet());
     }
 
     /**
@@ -307,40 +351,13 @@ class WebPageTest extends PHPUnit_Framework_TestCase
     {
         return [
             'none' => [
-                'httpResponse' => $this->createHttpResponse('text/html'),
+                'response' => ResponseFactory::create('', 'text/html'),
                 'expectedHttpResponseCharacterSet' => null,
             ],
             'is present' => [
-                'httpResponse' => $this->createHttpResponse('text/html; charset=utf-8'),
+                'response' => ResponseFactory::create('', 'text/html; charset=utf-8'),
                 'expectedHttpResponseCharacterSet' => 'utf-8',
             ],
         ];
-    }
-
-    private function loadFixture($fixtureName)
-    {
-        return file_get_contents(__DIR__ . '/Fixtures/' . $fixtureName);
-    }
-
-    /**
-     * @param $contentTypeHeader
-     * @param $bodyFixture
-     * @return MockInterface|ResponseInterface
-     */
-    private function createHttpResponse($contentTypeHeader, $bodyFixture = null)
-    {
-        $httpResponse = \Mockery::mock(ResponseInterface::class);
-        $httpResponse
-            ->shouldReceive('getHeader')
-            ->with('content-type')
-            ->andReturn($contentTypeHeader);
-
-        if (!empty($bodyFixture)) {
-            $httpResponse
-                ->shouldReceive('getBody')
-                ->andReturn($this->loadFixture($bodyFixture));
-        }
-
-        return $httpResponse;
     }
 }
