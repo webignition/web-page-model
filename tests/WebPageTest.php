@@ -347,4 +347,17 @@ class WebPageTest extends PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    public function testGetModelledContentTypeStrings()
+    {
+        $this->assertEquals(
+            [
+                WebPage::CONTENT_TYPE_TEXT_HTML,
+                WebPage::CONTENT_TYPE_APPLICATION_XML,
+                WebPage::CONTENT_TYPE_TEXT_XML,
+                WebPage::CONTENT_TYPE_APPLICATION_XHTML_XML,
+            ],
+            WebPage::getModelledContentTypeStrings()
+        );
+    }
 }

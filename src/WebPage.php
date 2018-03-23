@@ -145,12 +145,7 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
      */
     protected static function getAllowedContentTypeStrings()
     {
-        return [
-            self::CONTENT_TYPE_TEXT_HTML,
-            self::CONTENT_TYPE_APPLICATION_XML,
-            self::CONTENT_TYPE_TEXT_XML,
-            self::CONTENT_TYPE_APPLICATION_XHTML_XML,
-        ];
+        return self::getModelledContentTypeStrings();
     }
 
     /**
@@ -159,5 +154,18 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
     protected static function getAllowedContentTypePatterns()
     {
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getModelledContentTypeStrings()
+    {
+        return [
+            self::CONTENT_TYPE_TEXT_HTML,
+            self::CONTENT_TYPE_APPLICATION_XML,
+            self::CONTENT_TYPE_TEXT_XML,
+            self::CONTENT_TYPE_APPLICATION_XHTML_XML,
+        ];
     }
 }
