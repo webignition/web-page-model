@@ -3,20 +3,21 @@
 namespace webignition\WebResource\WebPage;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 use QueryPath\DOMQuery;
 use QueryPath\Exception as QueryPathException;
 use webignition\CharacterSetList\CharacterSetList;
-use webignition\WebResource\WebResource;
+use webignition\InternetMediaType\Parser\ParseException as InternetMediaTypeParseException;
+use webignition\WebResource\SpecificContentTypeWebResource;
+use webignition\WebResource\Exception\InvalidContentTypeException;
+use webignition\WebResourceInterfaces\WebPageInterface;
 
-/**
- * Models a web page
- */
-class WebPage extends WebResource
+class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
 {
     const CONTENT_TYPE_TEXT_HTML = 'text/html';
     const CONTENT_TYPE_APPLICATION_XML = 'application/xml';
     const CONTENT_TYPE_TEXT_XML = 'text/xml';
-    const APPLICATION_XML_SUB_CONTENT_TYPE_PATTERN = '/application\/[a-z]+\+xml/';
+    const CONTENT_TYPE_APPLICATION_XHTML_XML = 'application/xhtml+xml';
 
     const CHARSET_GB2312 = 'GB2312';
     const CHARSET_BIG5 = 'BIG5';
@@ -29,57 +30,45 @@ class WebPage extends WebResource
 
     /**
      * @param ResponseInterface $response
-     * @param string|null $url
+     * @param string|UriInterface $uri
      *
      * @throws InvalidContentTypeException
+     * @throws InternetMediaTypeParseException
      */
-    public function __construct(ResponseInterface $response, $url = null)
+    public function __construct(ResponseInterface $response, UriInterface $uri = null)
     {
-        parent::__construct($response, $url);
-
-        $contentType = $this->getContentType();
-        $contentTypeSubtypeString = $contentType->getTypeSubtypeString();
-
-        $hasTextHtmlContentType = self::CONTENT_TYPE_TEXT_HTML === $contentTypeSubtypeString;
-        $hasApplicationXmlContentType = self::CONTENT_TYPE_APPLICATION_XML === $contentTypeSubtypeString;
-        $hasTextXmlContentType = self::CONTENT_TYPE_TEXT_XML === $contentTypeSubtypeString;
-
-        if (!$hasTextHtmlContentType && !$hasApplicationXmlContentType && !$hasTextXmlContentType) {
-            if (0 === preg_match(self::APPLICATION_XML_SUB_CONTENT_TYPE_PATTERN, $contentTypeSubtypeString)) {
-                throw new InvalidContentTypeException($contentType);
-            }
-        }
+        parent::__construct($response, $uri);
 
         $this->parser = new Parser();
         $this->parser->setWebPage($this);
     }
 
     /**
-     * Returns, in order of preference, first found to be valid of:
-     *  - document character set
-     *  - http response character set
-     *
-     * @return string|null
+     * {@inheritdoc}
      *
      * @throws QueryPathException
      */
     public function getCharacterSet()
     {
-        if ($this->hasDocumentCharacterSet() && $this->isValidCharacterSet($this->getDocumentCharacterSet())) {
-            return $this->getDocumentCharacterSet();
+        $characterSetList = new CharacterSetList();
+
+        $documentCharacterSet = $this->getDocumentCharacterSet();
+        if ($characterSetList->contains($documentCharacterSet)) {
+            return $documentCharacterSet;
         }
 
-        if ($this->hasResponseCharacterSet() && $this->isValidCharacterSet($this->getResponseCharacterSet())) {
-            return $this->getResponseCharacterSet();
+        $responseCharacterSet = $this->getResponseCharacterSet();
+        if ($characterSetList->contains($responseCharacterSet)) {
+            return $responseCharacterSet;
         }
 
         return null;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      *
-     * @throws \QueryPath\Exception
+     * @throws QueryPathException
      */
     public function getDocumentCharacterSet()
     {
@@ -87,45 +76,7 @@ class WebPage extends WebResource
     }
 
     /**
-     * @return bool
-     *
-     * @throws QueryPathException
-     */
-    private function hasDocumentCharacterSet()
-    {
-        return !is_null($this->getDocumentCharacterSet());
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasResponseCharacterSet()
-    {
-        return !is_null($this->getResponseCharacterSet());
-    }
-
-    /**
-     * @param string $characterSet
-     *
-     * @return bool
-     */
-    private function isValidCharacterSet($characterSet)
-    {
-        $characterSetList = new CharacterSetList();
-
-        return $characterSetList->contains($characterSet);
-    }
-
-    /**
-     * @return bool
-     */
-    public function getDocumentCharacterSetDefinitionIsMalformed()
-    {
-        return $this->parser->getIsContentTypeMalformed();
-    }
-
-    /**
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getResponseCharacterSet()
     {
@@ -146,7 +97,7 @@ class WebPage extends WebResource
      *
      * @throws QueryPathException
      */
-    public function find($cssSelector, $options = [])
+    public function find($cssSelector, array $options = [])
     {
         $content = $this->convertToReadableCharacterSet($this->getContent());
 
@@ -187,5 +138,26 @@ class WebPage extends WebResource
         }
 
         return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static function getAllowedContentTypeStrings()
+    {
+        return [
+            self::CONTENT_TYPE_TEXT_HTML,
+            self::CONTENT_TYPE_APPLICATION_XML,
+            self::CONTENT_TYPE_TEXT_XML,
+            self::CONTENT_TYPE_APPLICATION_XHTML_XML,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static function getAllowedContentTypePatterns()
+    {
+        return null;
     }
 }

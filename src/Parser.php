@@ -4,9 +4,8 @@ namespace webignition\WebResource\WebPage;
 
 use QueryPath\DOMQuery;
 use QueryPath\Exception as QueryPathException;
+use webignition\InternetMediaType\Parser\ParseException;
 use webignition\InternetMediaType\Parser\Parser as InternetMediaTypeParser;
-use webignition\InternetMediaType\InternetMediaType;
-use webignition\InternetMediaType\Parser\TypeParserException;
 
 class Parser
 {
@@ -61,6 +60,7 @@ class Parser
      * @return bool
      *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
     public function getIsContentTypeMalformed()
     {
@@ -77,6 +77,7 @@ class Parser
      * @return string|null
      *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
     public function getCharacterSet()
     {
@@ -94,6 +95,7 @@ class Parser
             @$this->getDomQuery(
                 $metaContentTypeSelector
             )->each(function ($index, \DOMElement $domElement) use (&$contentTypeString) {
+                unset($index);
                 $contentTypeString = $domElement->getAttribute('content');
             });
 
@@ -102,7 +104,6 @@ class Parser
                 $mediaTypeParser->setIgnoreInvalidAttributes(true);
                 $mediaTypeParser->setAttemptToRecoverFromInvalidInternalCharacter(true);
 
-                /* @var $mediaType InternetMediaType */
                 try {
                     $mediaType = $mediaTypeParser->parse($contentTypeString);
 
@@ -110,15 +111,15 @@ class Parser
                         $this->isContentTypeMalformed = $isMalformed;
                         return (string)$mediaType->getParameter('charset')->getValue();
                     }
-                } catch (TypeParserException $typeParserException) {
-                    // Occurs when we can't parse the in-markup content type
-                    // Ignore such exceptions to treat this as having no in-markup content type
+                } catch (ParseException $parseException) {
+                    throw new UnparseableContentTypeException($contentTypeString);
                 }
             }
         }
 
         $charsetString = '';
         @$this->getDomQuery('meta[charset]')->each(function ($index, \DOMElement $domElement) use (&$charsetString) {
+            unset($index);
             $charsetString = $domElement->getAttribute('charset');
         });
 

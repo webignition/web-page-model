@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "75188379edaf5c43777ade1a16a23346",
+    "content-hash": "4b67d213212b4af5c0cd322f6513f7cf",
     "packages": [
         {
             "name": "masterminds/html5",
@@ -253,20 +253,21 @@
         },
         {
             "name": "webignition/internet-media-type",
-            "version": "0.4.8",
+            "version": "1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/internet-media-type.git",
-                "reference": "1a5bbe38033b00b23acd5e1dd10489bb07eed77c"
+                "reference": "464a7699fc1dca47d7b58573e605d0a247de7c5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/1a5bbe38033b00b23acd5e1dd10489bb07eed77c",
-                "reference": "1a5bbe38033b00b23acd5e1dd10489bb07eed77c",
+                "url": "https://api.github.com/repos/webignition/internet-media-type/zipball/464a7699fc1dca47d7b58573e605d0a247de7c5c",
+                "reference": "464a7699fc1dca47d7b58573e605d0a247de7c5c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0",
+                "webignition/internet-media-type-interface": ">=0.1,<1.0",
                 "webignition/quoted-string": ">=0.2.1,<1.0",
                 "webignition/string-parser": ">=0.2.3,<1.0"
             },
@@ -277,8 +278,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "webignition\\InternetMediaType\\": "src/",
-                    "webignition\\Tests\\InternetMediaType\\": "tests/"
+                    "webignition\\InternetMediaType\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -300,7 +300,51 @@
                 "media type",
                 "media-type"
             ],
-            "time": "2018-03-12T14:54:00+00:00"
+            "time": "2018-03-22T10:51:41+00:00"
+        },
+        {
+            "name": "webignition/internet-media-type-interface",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/internet-media-type-interface.git",
+                "reference": "db57dba3b4dacb78c24cb2a4a88768be47794726"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/internet-media-type-interface/zipball/db57dba3b4dacb78c24cb2a4a88768be47794726",
+                "reference": "db57dba3b4dacb78c24cb2a4a88768be47794726",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\InternetMediaTypeInterface\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "PHP interfaces for a model of an http://en.wikipedia.org/wiki/Internet_media_type",
+            "homepage": "https://github.com/webignition/internet-media-type-interface",
+            "keywords": [
+                "content type",
+                "content-type",
+                "internet media type",
+                "media type",
+                "media-type"
+            ],
+            "time": "2018-03-21T10:55:33+00:00"
         },
         {
             "name": "webignition/quoted-string",
@@ -397,34 +441,82 @@
             "time": "2017-05-11T10:04:12+00:00"
         },
         {
-            "name": "webignition/web-resource-model",
-            "version": "2.0.1",
+            "name": "webignition/web-resource-interfaces",
+            "version": "0.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "88dcccc52671bb537ba166d56d41200bfcb7ecc1"
+                "url": "https://github.com/webignition/web-resource-interfaces.git",
+                "reference": "e63c525c6427b350ed74b683cb8a2484d9419748"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/88dcccc52671bb537ba166d56d41200bfcb7ecc1",
-                "reference": "88dcccc52671bb537ba166d56d41200bfcb7ecc1",
+                "url": "https://api.github.com/repos/webignition/web-resource-interfaces/zipball/e63c525c6427b350ed74b683cb8a2484d9419748",
+                "reference": "e63c525c6427b350ed74b683cb8a2484d9419748",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0",
                 "psr/http-message": "~1.0",
-                "webignition/internet-media-type": ">=0.4.7,<2.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "~1.0",
-                "phpunit/phpunit": "~5.0",
-                "squizlabs/php_codesniffer": "3.*"
+                "webignition/internet-media-type-interface": ">=0.1,<1"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "webignition\\WebResource\\": "src/",
-                    "webignition\\Tests\\WebResource\\": "tests/"
+                    "webignition\\WebResourceInterfaces\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Interfaces for web resource models and services to retrieve and create them",
+            "homepage": "https://github.com/webignition/web-resource-interfaces",
+            "keywords": [
+                "Sitemap",
+                "json-document",
+                "model",
+                "psr-7",
+                "web-page"
+            ],
+            "time": "2018-03-22T14:35:36+00:00"
+        },
+        {
+            "name": "webignition/web-resource-model",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/web-resource-model.git",
+                "reference": "4509464b3cf926d0427bbebd3bf2972055f29efc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/4509464b3cf926d0427bbebd3bf2972055f29efc",
+                "reference": "4509464b3cf926d0427bbebd3bf2972055f29efc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0",
+                "psr/http-message": "~1.0",
+                "webignition/internet-media-type": ">=1.2,<2.0",
+                "webignition/internet-media-type-interface": ">=0.1,<1",
+                "webignition/web-resource-interfaces": ">=0.8,<1"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~5.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/web-resource-testing-tools": ">=0.1,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebResource\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -444,7 +536,7 @@
                 "psr-7",
                 "web"
             ],
-            "time": "2018-03-20T13:21:10+00:00"
+            "time": "2018-03-23T12:19:11+00:00"
         }
     ],
     "packages-dev": [
@@ -1880,6 +1972,46 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2018-02-16T09:50:28+00:00"
+        },
+        {
+            "name": "webignition/web-resource-testing-tools",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/web-resource-testing-tools.git",
+                "reference": "1638d85f18bcbb1fa789dcaa9a3a2252f46c5867"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/web-resource-testing-tools/zipball/1638d85f18bcbb1fa789dcaa9a3a2252f46c5867",
+                "reference": "1638d85f18bcbb1fa789dcaa9a3a2252f46c5867",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.0",
+                "psr/http-message": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebResource\\TestingTools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "homepage": "https://github.com/webignition/web-resource-testing-tools",
+            "time": "2018-03-23T12:34:37+00:00"
         },
         {
             "name": "webmozart/assert",
