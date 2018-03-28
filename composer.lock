@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "30ae3f5a74001af28a195b2d25c0f218",
+    "content-hash": "abe50e482add37a444de3f1606c7dc55",
     "packages": [
         {
             "name": "masterminds/html5",
@@ -442,16 +442,16 @@
         },
         {
             "name": "webignition/web-resource-interfaces",
-            "version": "0.9",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-interfaces.git",
-                "reference": "90705b3c5e571a9046b52bf033ea23c3cfcf5ade"
+                "reference": "c9896e92aba022e3bc5ed79afdc74849fdc470af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-interfaces/zipball/90705b3c5e571a9046b52bf033ea23c3cfcf5ade",
-                "reference": "90705b3c5e571a9046b52bf033ea23c3cfcf5ade",
+                "url": "https://api.github.com/repos/webignition/web-resource-interfaces/zipball/c9896e92aba022e3bc5ed79afdc74849fdc470af",
+                "reference": "c9896e92aba022e3bc5ed79afdc74849fdc470af",
                 "shasum": ""
             },
             "require": {
@@ -484,20 +484,20 @@
                 "psr-7",
                 "web-page"
             ],
-            "time": "2018-03-23T14:31:08+00:00"
+            "time": "2018-03-28T11:00:16+00:00"
         },
         {
             "name": "webignition/web-resource-model",
-            "version": "3.1",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "e401d2856f0ce71943f58f266cbec72d0e74407f"
+                "reference": "65dac45ca92761d24988afd7d7fb00179112cdcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/e401d2856f0ce71943f58f266cbec72d0e74407f",
-                "reference": "e401d2856f0ce71943f58f266cbec72d0e74407f",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/65dac45ca92761d24988afd7d7fb00179112cdcc",
+                "reference": "65dac45ca92761d24988afd7d7fb00179112cdcc",
                 "shasum": ""
             },
             "require": {
@@ -505,7 +505,7 @@
                 "psr/http-message": "^1",
                 "webignition/internet-media-type": "^1.2",
                 "webignition/internet-media-type-interface": "^0.1",
-                "webignition/web-resource-interfaces": "^0.9"
+                "webignition/web-resource-interfaces": ">=0.1,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1",
@@ -536,7 +536,7 @@
                 "psr-7",
                 "web"
             ],
-            "time": "2018-03-23T14:42:31+00:00"
+            "time": "2018-03-28T11:23:47+00:00"
         }
     ],
     "packages-dev": [
