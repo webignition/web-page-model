@@ -12,7 +12,7 @@ use webignition\WebResource\TestingTools\FixtureLoader;
 use webignition\WebResource\TestingTools\ResponseFactory;
 use webignition\WebResource\WebPage\WebPage;
 
-class WebPageTest extends PHPUnit_Framework_TestCase
+class WebPageTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider createInvalidContentTypeDataProvider

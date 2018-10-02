@@ -24,16 +24,9 @@ class Parser
      */
     private $isContentTypeMalformed = null;
 
-    /**
-     * @param WebPage $webPage
-     *
-     * @return self
-     */
     public function setWebPage(WebPage $webPage)
     {
         $this->webPage = $webPage;
-
-        return $this;
     }
 
     /**
@@ -44,7 +37,7 @@ class Parser
      *
      * @throws QueryPathException
      */
-    public function getDomQuery($cssSelector, $options = array())
+    public function getDomQuery(string $cssSelector, $options = array()): DOMQuery
     {
         $options += array(
             'ignore_parser_warnings' => true,
@@ -62,7 +55,7 @@ class Parser
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function getIsContentTypeMalformed()
+    public function getIsContentTypeMalformed(): bool
     {
         if (is_null($this->isContentTypeMalformed)) {
             $this->getCharacterSet();
@@ -79,7 +72,7 @@ class Parser
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function getCharacterSet()
+    public function getCharacterSet(): ?string
     {
         $this->isContentTypeMalformed = false;
 

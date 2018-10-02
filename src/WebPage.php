@@ -44,9 +44,8 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
     public function getCharacterSet()
     {
@@ -66,9 +65,8 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
     public function getDocumentCharacterSet()
     {
@@ -96,8 +94,9 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
      * @return DOMQuery
      *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
-    public function find($cssSelector, array $options = [])
+    public function find(string $cssSelector, array $options = []): DOMQuery
     {
         $content = $this->convertToReadableCharacterSet($this->getContent());
 
@@ -124,8 +123,9 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
      * @return string
      *
      * @throws QueryPathException
+     * @throws UnparseableContentTypeException
      */
-    private function convertToReadableCharacterSet($content)
+    private function convertToReadableCharacterSet(string $content): string
     {
         $comparatorCharacterSet = strtoupper($this->getCharacterSet());
 
@@ -140,26 +140,17 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
         return $content;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getAllowedContentTypeStrings()
+    protected static function getAllowedContentTypeStrings(): ?array
     {
         return self::getModelledContentTypeStrings();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getAllowedContentTypePatterns()
+    protected static function getAllowedContentTypePatterns(): ?array
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getModelledContentTypeStrings()
+    public static function getModelledContentTypeStrings(): array
     {
         return [
             self::CONTENT_TYPE_TEXT_HTML,

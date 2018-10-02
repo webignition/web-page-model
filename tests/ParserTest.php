@@ -13,7 +13,7 @@ use webignition\WebResource\WebPage\Parser;
 use webignition\WebResource\WebPage\UnparseableContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
 
-class ParserTest extends PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Parser
@@ -34,12 +34,12 @@ class ParserTest extends PHPUnit_Framework_TestCase
      * @dataProvider getIsContentTypeMalformedDataProvider
      *
      * @param WebPage $webPage
-     * @param string $expectedContentTypeIsMalformed
+     * @param bool $expectedContentTypeIsMalformed
      *
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function testGetIsContentTypeMalformed(WebPage $webPage, $expectedContentTypeIsMalformed)
+    public function testGetIsContentTypeMalformed(WebPage $webPage, bool $expectedContentTypeIsMalformed)
     {
         $this->parser->setWebPage($webPage);
 
@@ -52,7 +52,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
      * @throws InvalidContentTypeException
      * @throws InternetMediaTypeParseException
      */
-    public function getIsContentTypeMalformedDataProvider()
+    public function getIsContentTypeMalformedDataProvider(): array
     {
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
 
@@ -110,12 +110,12 @@ class ParserTest extends PHPUnit_Framework_TestCase
      * @dataProvider getCharacterSetSuccessDataProvider
      *
      * @param WebPage $webPage
-     * @param string $expectedCharacterSet
+     * @param string|null $expectedCharacterSet
      *
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function testGetCharacterSetSuccess(WebPage $webPage, $expectedCharacterSet)
+    public function testGetCharacterSetSuccess(WebPage $webPage, ?string $expectedCharacterSet)
     {
         $this->parser->setWebPage($webPage);
 
@@ -128,7 +128,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
      * @throws InternetMediaTypeParseException
      * @throws InvalidContentTypeException
      */
-    public function getCharacterSetSuccessDataProvider()
+    public function getCharacterSetSuccessDataProvider(): array
     {
         return [
             'empty response' => [
@@ -191,8 +191,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCharacterSetUnparseableContentType(
         WebPage $webPage,
-        $expectedExceptionMessage,
-        $expectedContentType
+        string $expectedExceptionMessage,
+        string $expectedContentType
     ) {
         $this->parser->setWebPage($webPage);
 
@@ -212,7 +212,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
      * @throws InvalidContentTypeException
      * @throws InternetMediaTypeParseException
      */
-    public function getCharacterSetUnparseableContentTypeDataProvider()
+    public function getCharacterSetUnparseableContentTypeDataProvider(): array
     {
         return [
             'meta name="Content-Type" (unparseable value, malformed)' => [

@@ -12,20 +12,14 @@ class UnparseableContentTypeException extends \Exception
      */
     private $contentTypeString;
 
-    /**
-     * @param $contentTypeString
-     */
-    public function __construct($contentTypeString)
+    public function __construct(string $contentTypeString)
     {
         parent::__construct(sprintf(self::MESSAGE, $contentTypeString), self::CODE);
 
         $this->contentTypeString = $contentTypeString;
     }
 
-    /**
-     * @return string
-     */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentTypeString;
     }
