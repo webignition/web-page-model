@@ -7,21 +7,19 @@ use Psr\Http\Message\UriInterface;
 use QueryPath\DOMQuery;
 use QueryPath\Exception as QueryPathException;
 use webignition\CharacterSetList\CharacterSetList;
+use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaType\Parser\ParseException as InternetMediaTypeParseException;
-use webignition\WebResource\SpecificContentTypeWebResource;
+use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
+use webignition\WebResource\ContentTypeFactory;
 use webignition\WebResource\Exception\InvalidContentTypeException;
+use webignition\WebResource\WebResource;
 use webignition\WebResourceInterfaces\WebPageInterface;
+use webignition\WebResourceInterfaces\WebResourceInterface;
 
-class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
+class WebPage extends WebResource implements WebPageInterface
 {
-    const CONTENT_TYPE_TEXT_HTML = 'text/html';
-    const CONTENT_TYPE_APPLICATION_XML = 'application/xml';
-    const CONTENT_TYPE_TEXT_XML = 'text/xml';
-    const CONTENT_TYPE_APPLICATION_XHTML_XML = 'application/xhtml+xml';
-
-    const CHARSET_GB2312 = 'GB2312';
-    const CHARSET_BIG5 = 'BIG5';
-    const CHARSET_UTF_8 = 'UTF-8';
+    const DEFAULT_CONTENT_TYPE_TYPE = 'text';
+    const DEFAULT_CONTENT_TYPE_SUBTYPE = 'html';
 
     /**
      * @var Parser
@@ -29,62 +27,47 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
     private $parser;
 
     /**
-     * @param ResponseInterface $response
-     * @param string|UriInterface $uri
-     *
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
+     * @var string|null
      */
-    public function __construct(ResponseInterface $response, UriInterface $uri = null)
+    private $characterSet;
+
+    protected function __construct(array $args)
     {
-        parent::__construct($response, $uri);
+        parent::__construct($args);
 
         $this->parser = new Parser();
         $this->parser->setWebPage($this);
     }
 
-    /**
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
-    public function getCharacterSet()
+    public static function getDefaultContentType(): InternetMediaType
     {
-        $characterSetList = new CharacterSetList();
+        $contentType = new InternetMediaType();
+        $contentType->setType(self::DEFAULT_CONTENT_TYPE_TYPE);
+        $contentType->setSubtype(self::DEFAULT_CONTENT_TYPE_SUBTYPE);
 
-        $documentCharacterSet = $this->getDocumentCharacterSet();
-        if ($characterSetList->contains($documentCharacterSet)) {
-            return $documentCharacterSet;
-        }
+        return $contentType;
+    }
 
-        $responseCharacterSet = $this->getResponseCharacterSet();
-        if ($characterSetList->contains($responseCharacterSet)) {
-            return $responseCharacterSet;
-        }
+    public function setResponse(ResponseInterface $response): WebResourceInterface
+    {
+        $this->characterSet = null;
 
-        return null;
+        return parent::setResponse($response);
     }
 
     /**
+     * @return null|string
+     *
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function getDocumentCharacterSet()
+    public function getCharacterSet(): ?string
     {
-        return $this->parser->getCharacterSet();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResponseCharacterSet()
-    {
-        $contentType = $this->getContentType();
-
-        if (!$contentType->hasParameter('charset')) {
-            return null;
+        if (empty($this->characterSet)) {
+            $this->characterSet = $this->deriveCharacterSet();
         }
 
-        return $contentType->getParameter('charset')->getValue();
+        return $this->characterSet;
     }
 
     /**
@@ -129,34 +112,64 @@ class WebPage extends SpecificContentTypeWebResource implements WebPageInterface
     {
         $comparatorCharacterSet = strtoupper($this->getCharacterSet());
 
-        if (self::CHARSET_GB2312 === $comparatorCharacterSet) {
-            $content = iconv(self::CHARSET_GB2312, self::CHARSET_UTF_8, $content);
+        if (CharacterSets::CHARSET_GB2312 === $comparatorCharacterSet) {
+            $content = iconv(CharacterSets::CHARSET_GB2312, CharacterSets::CHARSET_UTF_8, $content);
         }
 
-        if (self::CHARSET_BIG5 === $comparatorCharacterSet) {
-            $content = iconv(self::CHARSET_BIG5, self::CHARSET_UTF_8, $content);
+        if (CharacterSets::CHARSET_BIG5 === $comparatorCharacterSet) {
+            $content = iconv(CharacterSets::CHARSET_BIG5, CharacterSets::CHARSET_UTF_8, $content);
         }
 
         return $content;
     }
 
-    protected static function getAllowedContentTypeStrings(): ?array
+    /**
+     * @throws QueryPathException
+     * @throws UnparseableContentTypeException
+     */
+    public function deriveCharacterSet(): ?string
     {
-        return self::getModelledContentTypeStrings();
+        $characterSetList = new CharacterSetList();
+
+        $documentCharacterSet = $this->parser->getCharacterSet();
+        if ($characterSetList->contains($documentCharacterSet)) {
+            return $documentCharacterSet;
+        }
+
+        if (!empty($this->getResponse())) {
+            $responseCharacterSet = $this->getResponseCharacterSet();
+            if ($characterSetList->contains($responseCharacterSet)) {
+                return $responseCharacterSet;
+            }
+        }
+
+        return null;
     }
 
-    protected static function getAllowedContentTypePatterns(): ?array
+    private function getResponseCharacterSet(): ?string
     {
-        return null;
+        $charsetParameter = 'charset';
+        $contentType = $this->getContentType();
+
+        if (!$contentType->hasParameter($charsetParameter)) {
+            return null;
+        }
+
+        return $contentType->getParameter($charsetParameter)->getValue();
+    }
+
+    public static function models(InternetMediaTypeInterface $internetMediaType): bool
+    {
+        return in_array($internetMediaType->getTypeSubtypeString(), self::getModelledContentTypeStrings());
     }
 
     public static function getModelledContentTypeStrings(): array
     {
         return [
-            self::CONTENT_TYPE_TEXT_HTML,
-            self::CONTENT_TYPE_APPLICATION_XML,
-            self::CONTENT_TYPE_TEXT_XML,
-            self::CONTENT_TYPE_APPLICATION_XHTML_XML,
+            ContentTypes::CONTENT_TYPE_TEXT_HTML,
+            ContentTypes::CONTENT_TYPE_APPLICATION_XML,
+            ContentTypes::CONTENT_TYPE_TEXT_XML,
+            ContentTypes::CONTENT_TYPE_APPLICATION_XHTML_XML,
         ];
     }
 }

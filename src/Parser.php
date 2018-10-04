@@ -6,11 +6,12 @@ use QueryPath\DOMQuery;
 use QueryPath\Exception as QueryPathException;
 use webignition\InternetMediaType\Parser\ParseException;
 use webignition\InternetMediaType\Parser\Parser as InternetMediaTypeParser;
+use webignition\WebResourceInterfaces\WebPageInterface;
 
 class Parser
 {
     /**
-     * @var WebPage
+     * @var WebPageInterface
      */
     private $webPage;
 
@@ -24,7 +25,7 @@ class Parser
      */
     private $isContentTypeMalformed = null;
 
-    public function setWebPage(WebPage $webPage)
+    public function setWebPage(WebPageInterface $webPage)
     {
         $this->webPage = $webPage;
     }

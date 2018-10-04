@@ -31,9 +31,9 @@
     },
     "require": {
         "php": ">=7.2.0",
-        "webignition/web-resource-interfaces":">=0.1,<1",
+        "webignition/web-resource-interfaces":">=3.2,<4",
         "webignition/internet-media-type-interface":"^0.1",
-        "webignition/web-resource-model":">=3.2.1,<4",
+        "webignition/web-resource-model":">=4,<5",
         "webignition/internet-media-type":"^1.2",
         "querypath/QueryPath": ">=3.0.0",
         "webignition/character-set-list":"^0.2"

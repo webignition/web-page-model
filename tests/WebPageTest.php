@@ -2,119 +2,412 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
+use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use QueryPath\Exception as QueryPathException;
-use PHPUnit_Framework_TestCase;
-use webignition\InternetMediaType\Parser\ParseException as InternetMediaTypeParseException;
+use webignition\InternetMediaType\InternetMediaType;
+use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\WebResource\Exception\InvalidContentTypeException;
-use webignition\WebResource\TestingTools\ContentTypes;
 use webignition\WebResource\TestingTools\FixtureLoader;
-use webignition\WebResource\TestingTools\ResponseFactory;
+use webignition\WebResource\WebPage\UnparseableContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
 
 class WebPageTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @dataProvider createInvalidContentTypeDataProvider
-     *
-     * @param ResponseInterface $response
-     * @param string $expectedExceptionMessage
-     * @param string $expectedExceptionContentType
-     *
-     * @throws InternetMediaTypeParseException
-     */
-    public function testCreateInvalidContentType(
-        ResponseInterface $response,
-        $expectedExceptionMessage,
-        $expectedExceptionContentType
-    ) {
-        try {
-            new WebPage($response);
-            $this->fail(InvalidContentTypeException::class . ' not thrown');
-        } catch (InvalidContentTypeException $invalidContentTypeException) {
-            $this->assertEquals(InvalidContentTypeException::CODE, $invalidContentTypeException->getCode());
-            $this->assertEquals($expectedExceptionMessage, $invalidContentTypeException->getMessage());
-            $this->assertEquals($expectedExceptionContentType, (string)$invalidContentTypeException->getContentType());
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function createInvalidContentTypeDataProvider()
+    public function testCreateFromContentWithInvalidContentType()
     {
-        return [
-            'text/plain' => [
-                'response' => ResponseFactory::create('text/plain'),
-                'expectedExceptionMessage' => 'Invalid content type "text/plain"',
-                'expectedExceptionContentType' => 'text/plain',
-            ],
-            'application/json' => [
-                'response' => ResponseFactory::create('application/json'),
-                'expectedExceptionMessage' => 'Invalid content type "application/json"',
-                'expectedExceptionContentType' => 'application/json',
-            ],
-        ];
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $contentType = new InternetMediaType();
+        $contentType->setType('image');
+        $contentType->setSubtype('png');
+
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionMessage('Invalid content type "image/png"');
+
+        WebPage::createFromContent($uri, 'content', $contentType);
     }
 
     /**
-     * @dataProvider createValidContentTypeDataProvider
+     * @dataProvider createFromContentDataProvider
      *
-     * @param ResponseInterface $response
+     * @param InternetMediaTypeInterface|null $contentType
      * @param string $expectedContentTypeString
-     *
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
      */
-    public function testCreateValidContentType(ResponseInterface $response, $expectedContentTypeString)
+    public function testCreateFromContent(?InternetMediaTypeInterface $contentType, string $expectedContentTypeString)
     {
-        $webPage = new WebPage($response);
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
 
+        $content = 'web page content';
+
+        $webPage = WebPage::createFromContent($uri, $content, $contentType);
+
+        $this->assertInstanceOf(WebPage::class, $webPage);
+        $this->assertEquals($uri, $webPage->getUri());
+        $this->assertEquals($content, $webPage->getContent());
         $this->assertEquals($expectedContentTypeString, (string)$webPage->getContentType());
+        $this->assertNull($webPage->getResponse());
     }
 
-    /**
-     * @return array
-     */
-    public function createValidContentTypeDataProvider()
+    public function createFromContentDataProvider(): array
     {
-        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
-
         return [
-            'text/html' => [
-                'response' => ResponseFactory::create('text/html'),
+            'no content type' => [
+                'contentType' => null,
                 'expectedContentTypeString' => 'text/html',
             ],
-            'text/xml' => [
-                'response' => ResponseFactory::create('text/xml'),
-                'expectedContentTypeString' => 'text/xml',
+            'text/html content type' => [
+                'contentType' => $this->createContentType('text', 'html'),
+                'expectedContentTypeString' => 'text/html',
             ],
-            'application/xml' => [
-                'response' => ResponseFactory::create('application/xml'),
+            'application/xml content type' => [
+                'contentType' => $this->createContentType('application', 'xml'),
                 'expectedContentTypeString' => 'application/xml',
             ],
-            'application/xhtml+xml' => [
-                'response' => ResponseFactory::create('application/xhtml+xml'),
+            'text/xml content type' => [
+                'contentType' => $this->createContentType('text', 'xml'),
+                'expectedContentTypeString' => 'text/xml',
+            ],
+            'application/xhtml+xml content type' => [
+                'contentType' => $this->createContentType('application', 'xhtml+xml'),
                 'expectedContentTypeString' => 'application/xhtml+xml',
             ],
         ];
     }
 
+    public function testCreateFromResponseWithInvalidContentType()
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var ResponseInterface|MockInterface $response */
+        $response = \Mockery::mock(ResponseInterface::class);
+        $response
+            ->shouldReceive('getHeaderLine')
+            ->with(WebPage::HEADER_CONTENT_TYPE)
+            ->andReturn('image/jpg');
+
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionMessage('Invalid content type "image/jpg"');
+
+        WebPage::createFromResponse($uri, $response);
+    }
+
+    /**
+     * @dataProvider createFromResponseDataProvider
+     *
+     * @param string $responseContentTypeHeader
+     * @param string $expectedContentTypeString
+     */
+    public function testCreateFromResponse(string $responseContentTypeHeader, string $expectedContentTypeString)
+    {
+        $content = 'web page content';
+
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var StreamInterface|MockInterface $responseBody */
+        $responseBody = \Mockery::mock(StreamInterface::class);
+        $responseBody
+            ->shouldReceive('__toString')
+            ->andReturn($content);
+
+        /* @var ResponseInterface|MockInterface $response */
+        $response = \Mockery::mock(ResponseInterface::class);
+        $response
+            ->shouldReceive('getHeaderLine')
+            ->with(WebPage::HEADER_CONTENT_TYPE)
+            ->andReturn($responseContentTypeHeader);
+
+        $response
+            ->shouldReceive('getBody')
+            ->andReturn($responseBody);
+
+        $webPage = WebPage::createFromResponse($uri, $response);
+
+        $this->assertInstanceOf(WebPage::class, $webPage);
+        $this->assertEquals($uri, $webPage->getUri());
+        $this->assertEquals($content, $webPage->getContent());
+        $this->assertEquals($expectedContentTypeString, (string)$webPage->getContentType());
+        $this->assertEquals($response, $webPage->getResponse());
+    }
+
+    public function createFromResponseDataProvider(): array
+    {
+        return [
+            'text/html content type' => [
+                'responseContentTypeHeader' => 'text/html',
+                'expectedContentTypeString' => 'text/html',
+            ],
+            'application/xml content type' => [
+                'responseContentTypeHeader' => 'application/xml',
+                'expectedContentTypeString' => 'application/xml',
+            ],
+            'text/xml content type' => [
+                'responseContentTypeHeader' => 'text/xml',
+                'expectedContentTypeString' => 'text/xml',
+            ],
+            'application/xhtml+xml content type' => [
+                'responseContentTypeHeader' => 'application/xhtml+xml',
+                'expectedContentTypeString' => 'application/xhtml+xml',
+            ],
+        ];
+    }
+
+    public function testSetUri()
+    {
+        /* @var UriInterface|MockInterface $currentUri */
+        $currentUri = \Mockery::mock(UriInterface::class);
+
+        /* @var UriInterface|MockInterface $newUri */
+        $newUri = \Mockery::mock(UriInterface::class);
+
+        $webPage = WebPage::createFromContent($currentUri, '');
+
+        $this->assertEquals($currentUri, $webPage->getUri());
+
+        $updatedWebPage = $webPage->setUri($newUri);
+
+        $this->assertInstanceOf(WebPage::class, $updatedWebPage);
+        $this->assertEquals($newUri, $updatedWebPage->getUri());
+        $this->assertNotEquals(spl_object_hash($webPage), spl_object_hash($updatedWebPage));
+    }
+
+    public function testSetContentTypeValidContentType()
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $webPage = WebPage::createFromContent($uri, 'web page content');
+
+        $this->assertEquals('text/html', (string)$webPage->getContentType());
+
+        $contentType = $this->createContentType('application', 'xhtml+xml');
+
+        $updatedWebPage = $webPage->setContentType($contentType);
+
+        $this->assertEquals('application/xhtml+xml', (string)$updatedWebPage->getContentType());
+    }
+
+    public function testSetContentTypeInvalidContentType()
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $webPage = WebPage::createFromContent($uri, 'web page content');
+
+        $this->assertEquals('text/html', (string)$webPage->getContentType());
+
+        $contentType = $this->createContentType('application', 'octetstream');
+
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionMessage('Invalid content type "application/octetstream"');
+
+        $webPage->setContentType($contentType);
+    }
+
+    public function testSetContent()
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $currentContent = 'current content';
+        $newContent = 'new content';
+
+        $webPage = WebPage::createFromContent($uri, $currentContent);
+
+        $this->assertEquals($currentContent, $webPage->getContent());
+
+        $updatedWebPage = $webPage->setContent($newContent);
+
+        $this->assertInstanceOf(WebPage::class, $updatedWebPage);
+        $this->assertEquals($newContent, $updatedWebPage->getContent());
+        $this->assertNotEquals(spl_object_hash($webPage), spl_object_hash($updatedWebPage));
+    }
+
+    public function testSetResponseWithInvalidContentType()
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var ResponseInterface|MockInterface $currentResponse */
+        $currentResponse = \Mockery::mock(ResponseInterface::class);
+        $currentResponse
+            ->shouldReceive('getHeaderLine')
+            ->with(WebPage::HEADER_CONTENT_TYPE)
+            ->andReturn('text/html');
+
+        /* @var ResponseInterface|MockInterface $newResponse */
+        $newResponse = \Mockery::mock(ResponseInterface::class);
+        $newResponse
+            ->shouldReceive('getHeaderLine')
+            ->with(WebPage::HEADER_CONTENT_TYPE)
+            ->andReturn('image/jpg');
+
+        $webPage = WebPage::createFromResponse($uri, $currentResponse);
+
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionMessage('Invalid content type "image/jpg"');
+
+        $webPage->setResponse($newResponse);
+    }
+
+    /**
+     * @dataProvider getCharacterSetForWebPageCreatedFromContentDataProvider
+     *
+     * @param string $content
+     * @param string|null $expectedCharacterSet
+     *
+     * @throws QueryPathException
+     * @throws UnparseableContentTypeException
+     */
+    public function testGetCharacterSetForWebPageCreatedFromContent(string $content, ?string $expectedCharacterSet)
+    {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var Webpage $webPage */
+        $webPage = WebPage::createFromContent($uri, $content);
+
+        $this->assertSame($expectedCharacterSet, $webPage->getCharacterSet());
+    }
+
+    public function getCharacterSetForWebPageCreatedFromContentDataProvider(): array
+    {
+        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
+
+        return [
+            'invalid web page content' => [
+                'content' => 'foo',
+                'expectedCharacterSet' => null,
+            ],
+            'missing in document meta' => [
+                'content' => FixtureLoader::load('empty-document.html'),
+                'expectedCharacterSet' => null,
+            ],
+            'invalid in document meta' => [
+                'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
+                'expectedCharacterSet' => null,
+            ],
+            'present in document meta' => [
+                'content' => FixtureLoader::load('empty-document-with-valid-meta-charset.html'),
+                'expectedCharacterSet' => 'utf-8',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCharacterSetForWebPageCreatedFromResponseDataProvider
+     *
+     * @param ResponseInterface $response
+     * @param string|null $expectedCharacterSet
+     *
+     * @throws QueryPathException
+     * @throws UnparseableContentTypeException
+     */
+    public function testGetCharacterSetForWebPageCreatedFromResponse(
+        ResponseInterface $response,
+        ?string $expectedCharacterSet
+    ) {
+        /* @var UriInterface|MockInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromResponse($uri, $response);
+
+        $this->assertSame($expectedCharacterSet, $webPage->getCharacterSet());
+    }
+
+    public function getCharacterSetForWebPageCreatedFromResponseDataProvider(): array
+    {
+        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
+
+        return [
+            'no character set in content, no character set in response' => [
+                'response' => $this->createResponse(
+                    'text/html',
+                    FixtureLoader::load('empty-document.html')
+                ),
+                'expectedCharacterSet' => null,
+            ],
+            'no character set in content, has character set in response' => [
+                'response' => $this->createResponse(
+                    'text/html; charset=utf-8',
+                    FixtureLoader::load('empty-document.html')
+                ),
+                'expectedCharacterSet' => 'utf-8',
+            ],
+            'invalid character set in content, has character set in response' => [
+                'response' => $this->createResponse(
+                    'text/html; charset=utf-8',
+                    FixtureLoader::load('empty-document-with-invalid-meta-charset.html')
+                ),
+                'expectedCharacterSet' => 'utf-8',
+            ],
+            'has character set in content, no character set in response' => array(
+                'response' => $this->createResponse(
+                    'text/html',
+                    FixtureLoader::load('empty-document-with-valid-meta-charset.html')
+                ),
+                'expectedCharacterSet' => 'utf-8',
+            ),
+            'character set in content overrides character set in response' => array(
+                'response' => $this->createResponse(
+                    'text/html; charset=utf-8',
+                    FixtureLoader::load('document-with-big5-charset.html')
+                ),
+                'expectedCharacterSet' => 'big5',
+            ),
+        ];
+    }
+
+    private function createResponse(string $contentTypeHeader, string $content): ResponseInterface
+    {
+        $responseBody = \Mockery::mock(StreamInterface::class);
+        $responseBody
+            ->shouldReceive('__toString')
+            ->andReturn($content);
+
+        /* @var ResponseInterface|MockInterface $response */
+        $response = \Mockery::mock(ResponseInterface::class);
+        $response
+            ->shouldReceive('getHeaderLine')
+            ->with(WebPage::HEADER_CONTENT_TYPE)
+            ->andReturn($contentTypeHeader);
+
+        $response
+            ->shouldReceive('getBody')
+            ->andReturn($responseBody);
+
+        return $response;
+    }
+
     /**
      * @dataProvider findDataProvider
      *
-     * @param ResponseInterface $response
+     * @param string $content
      * @param string $selector
      * @param mixed $eachFunction
      * @param array $expectedFoundValues
      *
      * @throws QueryPathException
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
+     * @throws UnparseableContentTypeException
      */
-    public function testFind(ResponseInterface $response, $selector, $eachFunction, $expectedFoundValues)
+    public function testFind(string $content, string $selector, callable $eachFunction, array $expectedFoundValues)
     {
-        $webPage = new WebPage($response);
+        /* @var UriInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $contentType = new InternetMediaType();
+        $contentType->setType('text');
+        $contentType->setSubtype('html');
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromContent($uri, $content);
 
         $foundValues = [];
 
@@ -136,19 +429,13 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedFoundValues, $cleanedFoundValues);
     }
 
-    /**
-     * @return array
-     */
-    public function findDataProvider()
+    public function findDataProvider(): array
     {
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
 
         return [
             'script src values' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'document-with-script-elements.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
+                'content' => FixtureLoader::load('document-with-script-elements.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->getAttribute('src'));
@@ -160,10 +447,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
             'script values' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'document-with-script-elements.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
+                'content' => FixtureLoader::load('document-with-script-elements.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -175,10 +459,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
             'script values from charset=gb2313 content' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'document-with-script-elements-charset=gb2312.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
+                'content' => FixtureLoader::load('document-with-script-elements-charset=gb2312.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -190,10 +471,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
             'script values from charset=big5 content' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'document-with-big5-charset.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
+                'content' => FixtureLoader::load('document-with-big5-charset.html'),
                 'selector' => 'script',
                 'eachFunction' => function (\DOMElement $domElement) {
                     return trim($domElement->nodeValue);
@@ -203,161 +481,12 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider getCharacterSetDataProvider
-     *
-     * @param ResponseInterface $response
-     * @param string $expectedCharacterSet
-     *
-     * @throws InvalidContentTypeException
-     * @throws QueryPathException
-     * @throws InternetMediaTypeParseException
-     */
-    public function testGetCharacterSet(ResponseInterface $response, $expectedCharacterSet)
+    private function createContentType(string $type, string $subtype): InternetMediaTypeInterface
     {
-        $webPage = new WebPage($response);
+        $contentType = new InternetMediaType();
+        $contentType->setType($type);
+        $contentType->setSubtype($subtype);
 
-        $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
-    }
-
-    /**
-     * @return array
-     */
-    public function getCharacterSetDataProvider()
-    {
-        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
-
-        return [
-            'get from http response when missing in document meta' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document.html',
-                    'text/html; charset=utf-8'
-                ),
-                'expectedCharacterSet' => 'utf-8',
-            ],
-            'get from http response when invalid in document meta' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-invalid-meta-charset.html',
-                    'text/html; charset=utf-8'
-                ),
-                'expectedCharacterSet' => 'utf-8',
-            ],
-            'get from document meta when missing in http response' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-meta-charset.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharacterSet' => 'utf-8',
-            ],
-            'get when missing in document and http response' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharacterSet' => null,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getDocumentCharacterSetDataProvider
-     *
-     * @param ResponseInterface $response
-     * @param string $expectedCharacterSet
-     *
-     * @throws InvalidContentTypeException
-     * @throws QueryPathException
-     * @throws InternetMediaTypeParseException
-     */
-    public function testGetDocumentCharacterSet(ResponseInterface $response, $expectedCharacterSet)
-    {
-        $webPage = new WebPage($response);
-
-        $this->assertEquals($expectedCharacterSet, $webPage->getDocumentCharacterSet());
-    }
-
-    /**
-     * @return array
-     */
-    public function getDocumentCharacterSetDataProvider()
-    {
-        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
-
-        return [
-            'meta charset' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-meta-charset.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharset' => 'utf-8',
-            ],
-            'meta http-equiv content type charset' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharset' => 'utf-8',
-            ],
-            'meta http-equiv content type charset lowercase' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type-lowercase.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharset' => 'utf-8',
-            ],
-            'meta http-equiv content type charset malformed' => [
-                'response' => ResponseFactory::createFromFixture(
-                    'empty-document-with-malformed-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                ),
-                'expectedCharset' => 'utf-8',
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getHttpResponseCharacterSetDataProvider
-     *
-     * @param ResponseInterface $response
-     * @param $expectedHttpResponseCharacterSet
-     *
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
-     */
-    public function testGetHttpResponseCharacterSet(ResponseInterface $response, $expectedHttpResponseCharacterSet)
-    {
-        $webPage = new WebPage($response);
-
-        $this->assertEquals($expectedHttpResponseCharacterSet, $webPage->getResponseCharacterSet());
-    }
-
-    /**
-     * @return array
-     */
-    public function getHttpResponseCharacterSetDataProvider()
-    {
-        return [
-            'none' => [
-                'response' => ResponseFactory::create('text/html'),
-                'expectedHttpResponseCharacterSet' => null,
-            ],
-            'is present' => [
-                'response' => ResponseFactory::create('text/html; charset=utf-8'),
-                'expectedHttpResponseCharacterSet' => 'utf-8',
-            ],
-        ];
-    }
-
-    public function testGetModelledContentTypeStrings()
-    {
-        $this->assertEquals(
-            [
-                WebPage::CONTENT_TYPE_TEXT_HTML,
-                WebPage::CONTENT_TYPE_APPLICATION_XML,
-                WebPage::CONTENT_TYPE_TEXT_XML,
-                WebPage::CONTENT_TYPE_APPLICATION_XHTML_XML,
-            ],
-            WebPage::getModelledContentTypeStrings()
-        );
+        return $contentType;
     }
 }

@@ -2,13 +2,9 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
+use Psr\Http\Message\UriInterface;
 use QueryPath\Exception as QueryPathException;
-use PHPUnit_Framework_TestCase;
-use webignition\InternetMediaType\Parser\ParseException as InternetMediaTypeParseException;
-use webignition\WebResource\Exception\InvalidContentTypeException;
-use webignition\WebResource\TestingTools\ContentTypes;
 use webignition\WebResource\TestingTools\FixtureLoader;
-use webignition\WebResource\TestingTools\ResponseFactory;
 use webignition\WebResource\WebPage\Parser;
 use webignition\WebResource\WebPage\UnparseableContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
@@ -33,74 +29,52 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getIsContentTypeMalformedDataProvider
      *
-     * @param WebPage $webPage
+     * @param string $content
      * @param bool $expectedContentTypeIsMalformed
      *
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function testGetIsContentTypeMalformed(WebPage $webPage, bool $expectedContentTypeIsMalformed)
+    public function testGetIsContentTypeMalformed(string $content, bool $expectedContentTypeIsMalformed)
     {
+        /* @var UriInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromContent($uri, $content);
+
         $this->parser->setWebPage($webPage);
 
         $this->assertEquals($expectedContentTypeIsMalformed, $this->parser->getIsContentTypeMalformed());
     }
 
-    /**
-     * @return array
-     *
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
-     */
     public function getIsContentTypeMalformedDataProvider(): array
     {
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
 
         return [
-            'empty response' => [
-                'webPage' => new WebPage(ResponseFactory::create(ContentTypes::CONTENT_TYPE_HTML)),
-                'expectedContentTypeIsMalformed' => false,
-            ],
             'empty document' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => '',
                 'expectedContentTypeIsMalformed' => false,
             ],
             'meta http-equiv="Content-Type" (valid)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-valid-http-equiv-content-type.html'),
                 'expectedContentTypeIsMalformed' => false,
             ],
             'meta http-equiv="Content-Type" (valid, empty)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-empty-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-empty-http-equiv-content-type.html'),
                 'expectedContentTypeIsMalformed' => false,
             ],
             'meta http-equiv="content-type" (valid)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type-lowercase.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-valid-http-equiv-content-type-lowercase.html'),
                 'expectedContentTypeIsMalformed' => false,
             ],
             'meta name="Content-Type" (valid value, malformed)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-malformed-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-malformed-http-equiv-content-type.html'),
                 'expectedContentTypeIsMalformed' => true,
             ],
             'meta charset="foo" (invalid value, well-formed)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-invalid-meta-charset.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
                 'expectedContentTypeIsMalformed' => false,
             ],
         ];
@@ -109,72 +83,50 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getCharacterSetSuccessDataProvider
      *
-     * @param WebPage $webPage
+     * @param string $content
      * @param string|null $expectedCharacterSet
      *
      * @throws QueryPathException
      * @throws UnparseableContentTypeException
      */
-    public function testGetCharacterSetSuccess(WebPage $webPage, ?string $expectedCharacterSet)
+    public function testGetCharacterSetSuccess(string $content, ?string $expectedCharacterSet)
     {
+        /* @var UriInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromContent($uri, $content);
+
         $this->parser->setWebPage($webPage);
 
-        $this->assertEquals($expectedCharacterSet, $this->parser->getCharacterSet());
+        $this->assertSame($expectedCharacterSet, $this->parser->getCharacterSet());
     }
 
-    /**
-     * @return array
-     *
-     * @throws InternetMediaTypeParseException
-     * @throws InvalidContentTypeException
-     */
     public function getCharacterSetSuccessDataProvider(): array
     {
         return [
-            'empty response' => [
-                'webPage' => new WebPage(ResponseFactory::create(ContentTypes::CONTENT_TYPE_HTML)),
-                'expectedCharacterSet' => ''
-            ],
             'empty document' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
-                'expectedCharacterSet' => '',
+                'content' => '',
+                'expectedCharacterSet' => null,
             ],
             'meta http-equiv="Content-Type" (valid)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-valid-http-equiv-content-type.html'),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'meta http-equiv="Content-Type" (valid, empty)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-empty-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-empty-http-equiv-content-type.html'),
                 'expectedCharacterSet' => null,
             ],
             'meta http-equiv="content-type" (valid)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-valid-http-equiv-content-type-lowercase.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-valid-http-equiv-content-type-lowercase.html'),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'meta name="Content-Type" (valid value, malformed)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-malformed-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-malformed-http-equiv-content-type.html'),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'meta charset="foo" (invalid value, well-formed)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-invalid-meta-charset.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
                 'expectedCharacterSet' => 'foo',
             ],
         ];
@@ -183,17 +135,23 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getCharacterSetUnparseableContentTypeDataProvider
      *
-     * @param WebPage $webPage
+     * @param string $content
      * @param string $expectedExceptionMessage
      * @param string $expectedContentType
      *
      * @throws QueryPathException
      */
     public function testGetCharacterSetUnparseableContentType(
-        WebPage $webPage,
+        string $content,
         string $expectedExceptionMessage,
         string $expectedContentType
     ) {
+        /* @var UriInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromContent($uri, $content);
+
         $this->parser->setWebPage($webPage);
 
         try {
@@ -206,20 +164,11 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    /**
-     * @return array
-     *
-     * @throws InvalidContentTypeException
-     * @throws InternetMediaTypeParseException
-     */
     public function getCharacterSetUnparseableContentTypeDataProvider(): array
     {
         return [
             'meta name="Content-Type" (unparseable value, malformed)' => [
-                'webPage' => new WebPage(ResponseFactory::createFromFixture(
-                    'empty-document-with-unparseable-http-equiv-content-type.html',
-                    ContentTypes::CONTENT_TYPE_HTML
-                )),
+                'content' => FixtureLoader::load('empty-document-with-unparseable-http-equiv-content-type.html'),
                 'expectedExceptionMessage' => 'Unparseable content type "f o o"',
                 'expectedContentType' => 'f o o',
             ],
