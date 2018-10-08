@@ -6,12 +6,11 @@ use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use QueryPath\Exception as QueryPathException;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
+use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\TestingTools\FixtureLoader;
-use webignition\WebResource\WebPage\UnparseableContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
 
 class WebPageTest extends \PHPUnit\Framework\TestCase
@@ -234,12 +233,21 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         /* @var UriInterface|MockInterface $uri */
         $uri = \Mockery::mock(UriInterface::class);
 
+        $responseBody = \Mockery::mock(StreamInterface::class);
+        $responseBody
+            ->shouldReceive('__toString')
+            ->andReturn('');
+
         /* @var ResponseInterface|MockInterface $currentResponse */
         $currentResponse = \Mockery::mock(ResponseInterface::class);
         $currentResponse
             ->shouldReceive('getHeaderLine')
             ->with(WebPage::HEADER_CONTENT_TYPE)
             ->andReturn('text/html');
+
+        $currentResponse
+            ->shouldReceive('getBody')
+            ->andReturn($responseBody);
 
         /* @var ResponseInterface|MockInterface $newResponse */
         $newResponse = \Mockery::mock(ResponseInterface::class);
@@ -261,9 +269,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
      *
      * @param string $content
      * @param string|null $expectedCharacterSet
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
      */
     public function testGetCharacterSetForWebPageCreatedFromContent(string $content, ?string $expectedCharacterSet)
     {
@@ -305,9 +310,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
      *
      * @param ResponseInterface $response
      * @param string|null $expectedCharacterSet
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
      */
     public function testGetCharacterSetForWebPageCreatedFromResponse(
         ResponseInterface $response,
@@ -365,6 +367,21 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    public function testGetInspector()
+    {
+        /* @var UriInterface $uri */
+        $uri = \Mockery::mock(UriInterface::class);
+
+        $contentType = new InternetMediaType();
+        $contentType->setType('text');
+        $contentType->setSubtype('html');
+
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromContent($uri, '');
+
+        $this->assertInstanceOf(WebPageInspector::class, $webPage->getInspector());
+    }
+
     private function createResponse(string $contentTypeHeader, string $content): ResponseInterface
     {
         $responseBody = \Mockery::mock(StreamInterface::class);
@@ -384,101 +401,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ->andReturn($responseBody);
 
         return $response;
-    }
-
-    /**
-     * @dataProvider findDataProvider
-     *
-     * @param string $content
-     * @param string $selector
-     * @param mixed $eachFunction
-     * @param array $expectedFoundValues
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
-    public function testFind(string $content, string $selector, callable $eachFunction, array $expectedFoundValues)
-    {
-        /* @var UriInterface $uri */
-        $uri = \Mockery::mock(UriInterface::class);
-
-        $contentType = new InternetMediaType();
-        $contentType->setType('text');
-        $contentType->setSubtype('html');
-
-        /* @var WebPage $webPage */
-        $webPage = WebPage::createFromContent($uri, $content);
-
-        $foundValues = [];
-
-        $webPage
-            ->find($selector)
-            ->each(function ($index, \DOMElement $domElement) use (&$foundValues, $eachFunction) {
-                unset($index);
-                $foundValues[] = call_user_func($eachFunction, $domElement);
-            });
-
-        $cleanedFoundValues = [];
-
-        foreach ($foundValues as $foundValue) {
-            if (!empty($foundValue)) {
-                $cleanedFoundValues[] = $foundValue;
-            }
-        }
-
-        $this->assertEquals($expectedFoundValues, $cleanedFoundValues);
-    }
-
-    public function findDataProvider(): array
-    {
-        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
-
-        return [
-            'script src values' => [
-                'content' => FixtureLoader::load('document-with-script-elements.html'),
-                'selector' => 'script',
-                'eachFunction' => function (\DOMElement $domElement) {
-                    return trim($domElement->getAttribute('src'));
-                },
-                'expectedFoundValues' => [
-                    '//example.com/foo.js',
-                    '/vendor/example/bar.js',
-
-                ],
-            ],
-            'script values' => [
-                'content' => FixtureLoader::load('document-with-script-elements.html'),
-                'selector' => 'script',
-                'eachFunction' => function (\DOMElement $domElement) {
-                    return trim($domElement->nodeValue);
-                },
-                'expectedFoundValues' => [
-                    'var firstFromHead = true;',
-                    'var secondFromHead = true;',
-                    'var firstFromBody = true;',
-                ],
-            ],
-            'script values from charset=gb2313 content' => [
-                'content' => FixtureLoader::load('document-with-script-elements-charset=gb2312.html'),
-                'selector' => 'script',
-                'eachFunction' => function (\DOMElement $domElement) {
-                    return trim($domElement->nodeValue);
-                },
-                'expectedFoundValues' => [
-                    'var firstFromHead = true;',
-                    'var secondFromHead = true;',
-                    'var firstFromBody = true;',
-                ],
-            ],
-            'script values from charset=big5 content' => [
-                'content' => FixtureLoader::load('document-with-big5-charset.html'),
-                'selector' => 'script',
-                'eachFunction' => function (\DOMElement $domElement) {
-                    return trim($domElement->nodeValue);
-                },
-                'expectedFoundValues' => [],
-            ],
-        ];
     }
 
     private function createContentType(string $type, string $subtype): InternetMediaTypeInterface

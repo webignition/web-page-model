@@ -3,14 +3,11 @@
 namespace webignition\WebResource\WebPage;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
-use QueryPath\DOMQuery;
-use QueryPath\Exception as QueryPathException;
 use webignition\CharacterSetList\CharacterSetList;
 use webignition\InternetMediaType\InternetMediaType;
-use webignition\InternetMediaType\Parser\ParseException as InternetMediaTypeParseException;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
-use webignition\WebResource\ContentTypeFactory;
+use webignition\WebPageInspector\UnparseableContentTypeException;
+use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\WebResource;
 use webignition\WebResourceInterfaces\WebPageInterface;
@@ -22,21 +19,31 @@ class WebPage extends WebResource implements WebPageInterface
     const DEFAULT_CONTENT_TYPE_SUBTYPE = 'html';
 
     /**
-     * @var Parser
+     * @var WebPageInspector
      */
-    private $parser;
+    private $inspector;
 
     /**
      * @var string|null
      */
     private $characterSet;
 
+    /**
+     * @param array $args
+     *
+     * @throws InvalidContentTypeException
+     * @throws UnparseableContentTypeException
+     */
     protected function __construct(array $args)
     {
         parent::__construct($args);
 
-        $this->parser = new Parser();
-        $this->parser->setWebPage($this);
+        $this->inspector = new WebPageInspector($this);
+    }
+
+    public function getInspector(): WebPageInspector
+    {
+        return $this->inspector;
     }
 
     public static function getDefaultContentType(): InternetMediaType
@@ -55,12 +62,6 @@ class WebPage extends WebResource implements WebPageInterface
         return parent::setResponse($response);
     }
 
-    /**
-     * @return null|string
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
     public function getCharacterSet(): ?string
     {
         if (empty($this->characterSet)) {
@@ -70,68 +71,11 @@ class WebPage extends WebResource implements WebPageInterface
         return $this->characterSet;
     }
 
-    /**
-     * @param string $cssSelector
-     * @param array $options
-     *
-     * @return DOMQuery
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
-    public function find(string $cssSelector, array $options = []): DOMQuery
-    {
-        $content = $this->convertToReadableCharacterSet($this->getContent());
-
-        $options += array(
-            'ignore_parser_warnings' => true,
-            'convert_to_encoding' => is_null($this->getCharacterSet()) ? 'utf-8' : $this->getCharacterSet(),
-            'convert_from_encoding' => 'auto',
-            'use_parser' => 'html'
-        );
-
-        $currentLibxmlUseInternalErrorsValue = libxml_use_internal_errors();
-        libxml_use_internal_errors(true);
-
-        $result = new DOMQuery($content, $cssSelector, $options);
-
-        libxml_use_internal_errors($currentLibxmlUseInternalErrorsValue);
-
-        return $result;
-    }
-
-    /**
-     * @param string $content
-     *
-     * @return string
-     *
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
-    private function convertToReadableCharacterSet(string $content): string
-    {
-        $comparatorCharacterSet = strtoupper($this->getCharacterSet());
-
-        if (CharacterSets::CHARSET_GB2312 === $comparatorCharacterSet) {
-            $content = iconv(CharacterSets::CHARSET_GB2312, CharacterSets::CHARSET_UTF_8, $content);
-        }
-
-        if (CharacterSets::CHARSET_BIG5 === $comparatorCharacterSet) {
-            $content = iconv(CharacterSets::CHARSET_BIG5, CharacterSets::CHARSET_UTF_8, $content);
-        }
-
-        return $content;
-    }
-
-    /**
-     * @throws QueryPathException
-     * @throws UnparseableContentTypeException
-     */
     public function deriveCharacterSet(): ?string
     {
         $characterSetList = new CharacterSetList();
 
-        $documentCharacterSet = $this->parser->getCharacterSet();
+        $documentCharacterSet = $this->inspector->getCharacterSet();
         if ($characterSetList->contains($documentCharacterSet)) {
             return $documentCharacterSet;
         }

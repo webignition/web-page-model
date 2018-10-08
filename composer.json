@@ -36,7 +36,8 @@
         "webignition/web-resource-model":">=4,<5",
         "webignition/internet-media-type":"^1.2",
         "querypath/QueryPath": ">=3.0.0",
-        "webignition/character-set-list":"^0.2"
+        "webignition/character-set-list":"^0.2",
+        "webignition/web-page-inspector": ">=0.1,<1"
     },
     "require-dev": {
         "phpunit/phpunit": "^7",
