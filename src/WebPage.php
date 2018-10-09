@@ -10,6 +10,7 @@ use webignition\WebPageInspector\UnparseableContentTypeException;
 use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\WebResource;
+use webignition\WebResource\WebResourcePropertiesInterface;
 use webignition\WebResourceInterfaces\WebPageInterface;
 use webignition\WebResourceInterfaces\WebResourceInterface;
 
@@ -29,16 +30,25 @@ class WebPage extends WebResource implements WebPageInterface
     private $characterSet;
 
     /**
-     * @param array $args
+     * @param WebResourcePropertiesInterface $properties
      *
      * @throws InvalidContentTypeException
      * @throws UnparseableContentTypeException
      */
-    protected function __construct(array $args)
+    public function __construct(?WebResourcePropertiesInterface $properties = null)
     {
-        parent::__construct($args);
+        parent::__construct($properties);
 
         $this->inspector = new WebPageInspector($this);
+    }
+
+    public static function createFromContent(
+        string $content,
+        ?InternetMediaTypeInterface $contentType = null
+    ) : WebResourceInterface {
+        $contentType = static::getDefaultContentType();
+
+        return parent::createFromContent($content, $contentType);
     }
 
     public function getInspector(): WebPageInspector
@@ -46,13 +56,9 @@ class WebPage extends WebResource implements WebPageInterface
         return $this->inspector;
     }
 
-    public static function getDefaultContentType(): InternetMediaType
+    public static function getDefaultContentType(): InternetMediaTypeInterface
     {
-        $contentType = new InternetMediaType();
-        $contentType->setType(self::DEFAULT_CONTENT_TYPE_TYPE);
-        $contentType->setSubtype(self::DEFAULT_CONTENT_TYPE_SUBTYPE);
-
-        return $contentType;
+        return new InternetMediaType(self::DEFAULT_CONTENT_TYPE_TYPE, self::DEFAULT_CONTENT_TYPE_SUBTYPE);
     }
 
     public function setResponse(ResponseInterface $response): WebResourceInterface
