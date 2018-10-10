@@ -96,6 +96,24 @@ class WebPage extends WebResource implements WebPageInterface
         return null;
     }
 
+    public function getBaseUrl(): ?string
+    {
+        $crawler = $this->inspector->getCrawler();
+        $baseElementCrawler = $crawler->filter('base');
+
+        if (1 === $baseElementCrawler->count()) {
+            $hrefAttribute = trim($baseElementCrawler->attr('href'));
+
+            if (!empty($hrefAttribute)) {
+                return $hrefAttribute;
+            }
+        }
+
+        $uri = $this->getUri();
+
+        return empty($uri) ? null : (string)$uri;
+    }
+
     private function getResponseCharacterSet(): ?string
     {
         $charsetParameter = 'charset';

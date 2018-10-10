@@ -5,6 +5,7 @@ namespace webignition\Tests\WebResource\WebPage;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\WebPageInspector\UnparseableContentTypeException;
 use webignition\WebPageInspector\WebPageInspector;
@@ -218,6 +219,55 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(WebPageInspector::class, $webPage->getInspector());
     }
 
+    /**
+     * @dataProvider getBaseUrlDataProvider
+     *
+     * @param WebPage $webPage
+     * @param null|string $expectedBaseUrl
+     */
+    public function testGetBaseUrl(WebPage $webPage, ?string $expectedBaseUrl)
+    {
+        $this->assertSame($expectedBaseUrl, $webPage->getBaseUrl());
+    }
+
+    /**
+     * @return array
+     *
+     * @throws InvalidContentTypeException
+     */
+    public function getBaseUrlDataProvider(): array
+    {
+        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
+
+        return [
+            'empty content' => [
+                'webPage' => WebPage::createFromContent(''),
+                'expectedBaseUrl' => null,
+            ],
+            'response without base element' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', '')
+                ),
+                'expectedBaseUrl' => 'http://example.com/',
+            ],
+            'response without empty element' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('empty-base-element.html'))
+                ),
+                'expectedBaseUrl' => 'http://example.com/',
+            ],
+            'response with empty element' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('base-element.html'))
+                ),
+                'expectedBaseUrl' => 'http://base.example.com/foobar/',
+            ],
+        ];
+    }
+
     private function createResponse(string $contentTypeHeader, string $content): ResponseInterface
     {
         $responseBody = \Mockery::mock(StreamInterface::class);
@@ -237,5 +287,15 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ->andReturn($responseBody);
 
         return $response;
+    }
+
+    private function createUri(string $uriString)
+    {
+        $uri = \Mockery::mock(UriInterface::class);
+        $uri
+            ->shouldReceive('__toString')
+            ->andReturn($uriString);
+
+        return $uri;
     }
 }
