@@ -3,6 +3,7 @@
 namespace webignition\WebResource\WebPage;
 
 use Psr\Http\Message\ResponseInterface;
+use webignition\AbsoluteUrlDeriver\AbsoluteUrlDeriver;
 use webignition\CharacterSetList\CharacterSetList;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
@@ -100,18 +101,19 @@ class WebPage extends WebResource implements WebPageInterface
     {
         $crawler = $this->inspector->getCrawler();
         $baseElementCrawler = $crawler->filter('base');
+        $thisUri = (string)$this->getUri();
 
         if (1 === $baseElementCrawler->count()) {
             $hrefAttribute = trim($baseElementCrawler->attr('href'));
 
             if (!empty($hrefAttribute)) {
-                return $hrefAttribute;
+                $absoluteUrlDeriver = new AbsoluteUrlDeriver($hrefAttribute, $thisUri);
+
+                return (string)$absoluteUrlDeriver->getAbsoluteUrl();
             }
         }
 
-        $uri = $this->getUri();
-
-        return empty($uri) ? null : (string)$uri;
+        return empty($thisUri) ? null : $thisUri;
     }
 
     private function getResponseCharacterSet(): ?string

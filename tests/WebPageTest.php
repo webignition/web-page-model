@@ -265,6 +265,20 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedBaseUrl' => 'http://base.example.com/foobar/',
             ],
+            'response with root-relative element' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('root-relative-base-element.html'))
+                ),
+                'expectedBaseUrl' => 'http://example.com/',
+            ],
+            'response with relative element' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('relative-base-element.html'))
+                ),
+                'expectedBaseUrl' => 'http://example.com/foo',
+            ],
         ];
     }
 

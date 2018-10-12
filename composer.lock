@@ -4,8 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68e30d57636eea1ca87261d472610175",
+    "content-hash": "33e926294e9404250338a32b0f938068",
     "packages": [
+        {
+            "name": "etechnika/idna-convert",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/etechnika/idna-convert.git",
+                "reference": "85e488474269b19630ca4e711061e4aa61ac879a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/etechnika/idna-convert/zipball/85e488474269b19630ca4e711061e4aa61ac879a",
+                "reference": "85e488474269b19630ca4e711061e4aa61ac879a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "dev-master",
+                "pdepend/pdepend": "1.1.*",
+                "phploc/phploc": "2.0.*",
+                "phpmd/phpmd": "1.5.*",
+                "phpunit/php-code-coverage": "1.2.*",
+                "phpunit/phpcov": "dev-master",
+                "phpunit/phpunit": "3.7.*",
+                "satooshi/php-coveralls": "dev-master",
+                "sebastian/phpcpd": "2.0.*",
+                "squizlabs/php_codesniffer": "1.4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Etechnika\\IdnaConvert": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Tomasz Rutkowski",
+                    "email": "tomasz@etechnika.eu",
+                    "homepage": "http://etechnika.eu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Etechnika.eu idna-convert",
+            "homepage": "https://github.com/etechnika/idna-convert",
+            "keywords": [
+                "lib"
+            ],
+            "time": "2014-02-15T12:42:32+00:00"
+        },
         {
             "name": "psr/http-message",
             "version": "1.0.1",
@@ -284,6 +338,52 @@
             "time": "2018-08-06T14:22:27+00:00"
         },
         {
+            "name": "webignition/absolute-url-deriver",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/absolute-url-deriver.git",
+                "reference": "9c1f23ee5b609b32eefc836904254d0d481caa29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/absolute-url-deriver/zipball/9c1f23ee5b609b32eefc836904254d0d481caa29",
+                "reference": "9c1f23ee5b609b32eefc836904254d0d481caa29",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0",
+                "webignition/url": ">=1.9.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\AbsoluteUrlDeriver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Derives an absolute URL from relative and source URLs",
+            "homepage": "https://github.com/webignition/absolute-url-deriver",
+            "keywords": [
+                "absolute",
+                "url"
+            ],
+            "time": "2018-03-12T16:05:22+00:00"
+        },
+        {
             "name": "webignition/character-set-list",
             "version": "0.2.1",
             "source": {
@@ -514,6 +614,51 @@
             "time": "2017-05-11T11:41:31+00:00"
         },
         {
+            "name": "webignition/stream-factory-interface",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/stream-factory-interface.git",
+                "reference": "c2e7d8fdb0b129db1a47e0c28f47793758b4fc0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/stream-factory-interface/zipball/c2e7d8fdb0b129db1a47e0c28f47793758b4fc0d",
+                "reference": "c2e7d8fdb0b129db1a47e0c28f47793758b4fc0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "psr/http-message": "~1.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\StreamFactoryInterface\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Interface for a factory to create Psr\\Http\\Message\\StreamInterface objects",
+            "homepage": "https://github.com/webignition/stream-factory-interfaces",
+            "keywords": [
+                "psr-7",
+                "stream"
+            ],
+            "time": "2018-10-11T15:16:36+00:00"
+        },
+        {
             "name": "webignition/string-parser",
             "version": "0.2.3",
             "source": {
@@ -561,17 +706,66 @@
             "time": "2017-05-11T10:04:12+00:00"
         },
         {
-            "name": "webignition/web-page-inspector",
-            "version": "0.3",
+            "name": "webignition/url",
+            "version": "2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webignition/web-page-inspector.git",
-                "reference": "58b3136855085bdb8ef6348c50dfb391b8bd5fdf"
+                "url": "https://github.com/webignition/url.git",
+                "reference": "d26f181c8766574c3c9e4e22b19479a4a637dde0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/58b3136855085bdb8ef6348c50dfb391b8bd5fdf",
-                "reference": "58b3136855085bdb8ef6348c50dfb391b8bd5fdf",
+                "url": "https://api.github.com/repos/webignition/url/zipball/d26f181c8766574c3c9e4e22b19479a4a637dde0",
+                "reference": "d26f181c8766574c3c9e4e22b19479a4a637dde0",
+                "shasum": ""
+            },
+            "require": {
+                "etechnika/idna-convert": "1.0.*",
+                "php": ">=5.6.0",
+                "xrstf/ip-utils": "v1.0.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "php-mock/php-mock-mockery": "1.1.0",
+                "phpunit/phpunit": "~5.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\Url\\": "src/Url",
+                    "webignition\\NormalisedUrl\\": "src/NormalisedUrl"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Represents a URL, a library to be used in many other places. Applies semantically-lossless normalisation for comparisons.",
+            "homepage": "https://github.com/webignition/url",
+            "keywords": [
+                "url"
+            ],
+            "time": "2018-10-09T17:17:09+00:00"
+        },
+        {
+            "name": "webignition/web-page-inspector",
+            "version": "0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/web-page-inspector.git",
+                "reference": "80c6625fd33d33e6fb4218cf7989a88735bd8c84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/80c6625fd33d33e6fb4218cf7989a88735bd8c84",
+                "reference": "80c6625fd33d33e6fb4218cf7989a88735bd8c84",
                 "shasum": ""
             },
             "require": {
@@ -609,26 +803,27 @@
                 "inspector",
                 "webpage"
             ],
-            "time": "2018-10-09T13:59:13+00:00"
+            "time": "2018-10-10T16:06:08+00:00"
         },
         {
             "name": "webignition/web-resource-interfaces",
-            "version": "3.3",
+            "version": "3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-interfaces.git",
-                "reference": "0c6a2cb21c094af9f2ff9566bb125bafd00f54aa"
+                "reference": "07ed13f213d9251a89a82a9de988291bfb82d60a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-interfaces/zipball/0c6a2cb21c094af9f2ff9566bb125bafd00f54aa",
-                "reference": "0c6a2cb21c094af9f2ff9566bb125bafd00f54aa",
+                "url": "https://api.github.com/repos/webignition/web-resource-interfaces/zipball/07ed13f213d9251a89a82a9de988291bfb82d60a",
+                "reference": "07ed13f213d9251a89a82a9de988291bfb82d60a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.0",
                 "psr/http-message": "~1.0",
-                "webignition/internet-media-type-interface": ">=0.1,<1"
+                "webignition/internet-media-type-interface": ">=0.1,<1",
+                "webignition/stream-factory-interface": ">=0.2,<1"
             },
             "require-dev": {
                 "squizlabs/php_codesniffer": "^3"
@@ -658,20 +853,20 @@
                 "psr-7",
                 "web-page"
             ],
-            "time": "2018-10-08T16:22:49+00:00"
+            "time": "2018-10-11T16:17:06+00:00"
         },
         {
             "name": "webignition/web-resource-model",
-            "version": "5.2",
+            "version": "5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-resource-model.git",
-                "reference": "68a334e6b857e0716197cf1f6a867386451aee36"
+                "reference": "62bf5a135ce021ec0790725385a5cdbc5a47eabd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/68a334e6b857e0716197cf1f6a867386451aee36",
-                "reference": "68a334e6b857e0716197cf1f6a867386451aee36",
+                "url": "https://api.github.com/repos/webignition/web-resource-model/zipball/62bf5a135ce021ec0790725385a5cdbc5a47eabd",
+                "reference": "62bf5a135ce021ec0790725385a5cdbc5a47eabd",
                 "shasum": ""
             },
             "require": {
@@ -679,7 +874,8 @@
                 "psr/http-message": "^1",
                 "webignition/internet-media-type": "^2",
                 "webignition/internet-media-type-interface": "^0.4",
-                "webignition/web-resource-interfaces": ">=3.2,<4"
+                "webignition/stream-factory-interface": ">=0.2,<1",
+                "webignition/web-resource-interfaces": ">=3.4,<4"
             },
             "require-dev": {
                 "mockery/mockery": "^1",
@@ -710,7 +906,55 @@
                 "psr-7",
                 "web"
             ],
-            "time": "2018-10-09T15:02:20+00:00"
+            "time": "2018-10-11T16:29:19+00:00"
+        },
+        {
+            "name": "xrstf/ip-utils",
+            "version": "v1.0.0",
+            "source": {
+                "type": "hg",
+                "url": "https://bitbucket.org/xrstf/ip-utils",
+                "reference": "d7469bb0c407e423c9d1b49ff2e8980c800871e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/xrstf/ip-utils/get/d7469bb0c407e423c9d1b49ff2e8980c800871e2.zip",
+                "reference": "d7469bb0c407e423c9d1b49ff2e8980c800871e2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-default": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "IpUtils\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Mewes",
+                    "homepage": "http://www.xrstf.de/"
+                }
+            ],
+            "description": "small library to deal with IPv4 & IPv6 addresses and subnets",
+            "keywords": [
+                "IP",
+                "ipv4",
+                "ipv6",
+                "matching",
+                "subnet"
+            ],
+            "time": "2013-02-27T03:27:30+00:00"
         }
     ],
     "packages-dev": [
