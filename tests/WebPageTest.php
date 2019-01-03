@@ -1,4 +1,7 @@
 <?php
+/** @noinspection PhpDocSignatureInspection */
+/** @noinspection PhpDocMissingThrowsInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 
 namespace webignition\Tests\WebResource\WebPage;
 
@@ -7,7 +10,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
-use webignition\WebPageInspector\UnparseableContentTypeException;
 use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\TestingTools\FixtureLoader;
@@ -16,10 +18,6 @@ use webignition\WebResource\WebResourceProperties;
 
 class WebPageTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testCreateWithContentWithInvalidContentType()
     {
         $this->expectException(InvalidContentTypeException::class);
@@ -30,10 +28,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ]));
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testCreateWithResponseWithInvalidContentType()
     {
         $response = \Mockery::mock(ResponseInterface::class);
@@ -50,10 +44,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ]));
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testSetContentTypeInvalidContentType()
     {
         $webPage = new WebPage(WebResourceProperties::create([]));
@@ -66,10 +56,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         $webPage->setContentType(new InternetMediaType('application', 'octetstream'));
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testSetResponseWithInvalidContentType()
     {
         $responseBody = \Mockery::mock(StreamInterface::class);
@@ -105,12 +91,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getCharacterSetForWebPageCreatedFromContentDataProvider
-     *
-     * @param string $content
-     * @param string|null $expectedCharacterSet
-     *
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
      */
     public function testGetCharacterSetForWebPageCreatedFromContent(string $content, ?string $expectedCharacterSet)
     {
@@ -147,12 +127,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getCharacterSetForWebPageCreatedFromResponseDataProvider
-     *
-     * @param ResponseInterface $response
-     * @param string|null $expectedCharacterSet
-     *
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
      */
     public function testGetCharacterSetForWebPageCreatedFromResponse(
         ResponseInterface $response,
@@ -208,10 +182,6 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testGetInspector()
     {
         $webPage = new WebPage(WebResourceProperties::create([]));
@@ -221,20 +191,12 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getBaseUrlDataProvider
-     *
-     * @param WebPage $webPage
-     * @param null|string $expectedBaseUrl
      */
     public function testGetBaseUrl(WebPage $webPage, ?string $expectedBaseUrl)
     {
         $this->assertSame($expectedBaseUrl, $webPage->getBaseUrl());
     }
 
-    /**
-     * @return array
-     *
-     * @throws InvalidContentTypeException
-     */
     public function getBaseUrlDataProvider(): array
     {
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
@@ -282,6 +244,96 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @dataProvider isEncodingValidDataProvider
+     */
+    public function testIsEncodingValid(WebPage $webPage, bool $expectedEncodingIsValid)
+    {
+        $this->assertEquals($expectedEncodingIsValid, $webPage->isEncodingValid());
+    }
+
+    public function isEncodingValidDataProvider(): array
+    {
+        return [
+            'all-ascii empty document has valid encoding (without response)' => [
+                'webPage' => WebPage::createFromContent(
+                    FixtureLoader::load('empty-document.html')
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'all-ascii empty document has valid encoding (with response)' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('empty-document.html'))
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'big5-encoded document has valid encoding (without response)' => [
+                'webPage' => WebPage::createFromContent(
+                    FixtureLoader::load('document-with-big5-charset.html')
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'big5-encoded document has valid encoding (with response)' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse('text/html', FixtureLoader::load('document-with-big5-charset.html'))
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'gb2312-encoded document has valid encoding' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse(
+                        'text/html',
+                        FixtureLoader::load('document-with-script-elements-charset=gb2312.html')
+                    )
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'greek kosme is valid utf-8' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse(
+                        'text/html; charset=utf-8',
+                        $this->createFoo("κόσμε")
+                    )
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'invalidly-encoded windows-1251 document is not valid windows-1251' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse(
+                        'text/html; charset=utf-8',
+                        FixtureLoader::load('document-with-invalid-windows-1251-encoding.html')
+                    )
+                ),
+                'expectedEncodingIsValid' => false,
+            ],
+            'hi∑ is not valid utf-8' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse(
+                        'text/html; charset=utf-8',
+                        $this->createFoo("hi∑")
+                    )
+                ),
+                'expectedEncodingIsValid' => true,
+            ],
+            'hi∑ is not valid windows-1252' => [
+                'webPage' => WebPage::createFromResponse(
+                    $this->createUri('http://example.com/'),
+                    $this->createResponse(
+                        'text/html; charset=windows-1252',
+                        $this->createFoo("hi∑")
+                    )
+                ),
+                'expectedEncodingIsValid' => false,
+            ],
+        ];
+    }
+
     private function createResponse(string $contentTypeHeader, string $content): ResponseInterface
     {
         $responseBody = \Mockery::mock(StreamInterface::class);
@@ -311,5 +363,13 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ->andReturn($uriString);
 
         return $uri;
+    }
+
+    private function createFoo(string $fragment)
+    {
+        return sprintf(
+            '<!doctype html><html lang="en"><head><title>%s</title></head></html>',
+            $fragment
+        );
     }
 }
