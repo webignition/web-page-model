@@ -19,6 +19,7 @@ class WebPage extends WebResource implements WebPageInterface
 {
     const DEFAULT_CONTENT_TYPE_TYPE = 'text';
     const DEFAULT_CONTENT_TYPE_SUBTYPE = 'html';
+    const CHARACTER_SET_PARAMETER = 'charset';
 
     /**
      * @var WebPageInspector
@@ -87,8 +88,8 @@ class WebPage extends WebResource implements WebPageInterface
             return $documentCharacterSet;
         }
 
-        if (!empty($this->getResponse())) {
-            $responseCharacterSet = $this->getResponseCharacterSet();
+        if (!empty($this->getContentType())) {
+            $responseCharacterSet = $this->getContentTypeCharacterSet();
             if ($characterSetList->contains($responseCharacterSet)) {
                 return $responseCharacterSet;
             }
@@ -116,16 +117,15 @@ class WebPage extends WebResource implements WebPageInterface
         return empty($thisUri) ? null : $thisUri;
     }
 
-    private function getResponseCharacterSet(): ?string
+    private function getContentTypeCharacterSet(): ?string
     {
-        $charsetParameter = 'charset';
         $contentType = $this->getContentType();
 
-        if (!$contentType->hasParameter($charsetParameter)) {
+        if (!$contentType->hasParameter(self::CHARACTER_SET_PARAMETER)) {
             return null;
         }
 
-        return $contentType->getParameter($charsetParameter)->getValue();
+        return $contentType->getParameter(self::CHARACTER_SET_PARAMETER)->getValue();
     }
 
     public function isEncodingValid(): bool

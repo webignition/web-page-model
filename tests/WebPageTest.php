@@ -10,11 +10,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
+use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\TestingTools\FixtureLoader;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
+use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 
 class WebPageTest extends \PHPUnit\Framework\TestCase
 {
@@ -90,37 +92,81 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider getCharacterSetForWebPageCreatedFromContentDataProvider
+     * @dataProvider getCharacterSetForWebPageCreatedFromContentHasNoCharacterSetDataProvider
      */
-    public function testGetCharacterSetForWebPageCreatedFromContent(string $content, ?string $expectedCharacterSet)
-    {
+    public function testGetCharacterSetForWebPageCreatedFromContentHasNoCharacterSet(
+        string $content,
+        ?InternetMediaTypeInterface $contentType = null
+    ) {
         $webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_CONTENT => $content,
         ]));
 
-        $this->assertSame($expectedCharacterSet, $webPage->getCharacterSet());
+        if ($contentType) {
+            $webPage = $webPage->setContentType($contentType);
+        }
+
+        $this->assertNull($webPage->getCharacterSet());
     }
 
-    public function getCharacterSetForWebPageCreatedFromContentDataProvider(): array
+    public function getCharacterSetForWebPageCreatedFromContentHasNoCharacterSetDataProvider(): array
     {
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
 
         return [
             'invalid web page content' => [
                 'content' => 'foo',
-                'expectedCharacterSet' => null,
             ],
             'missing in document meta' => [
                 'content' => FixtureLoader::load('empty-document.html'),
-                'expectedCharacterSet' => null,
             ],
             'invalid in document meta' => [
                 'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
-                'expectedCharacterSet' => null,
             ],
-            'present in document meta' => [
+            'missing in document meta, missing in content type' => [
+                'content' => FixtureLoader::load('empty-document.html'),
+                'contentType' => $this->createContentType('text/html'),
+            ],
+            'invalid in document meta, missing in content type' => [
+                'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
+                'contentType' => $this->createContentType('text/html'),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getCharacterSetForWebPageCreatedFromContentHasCharacterSetDataProvider
+     */
+    public function testGetCharacterSetForWebPageCreatedFromContentHasCharacterSet(
+        string $content,
+        string $expectedCharacterSet,
+        ?InternetMediaTypeInterface $contentType = null
+    ) {
+        $webPage = new WebPage(WebResourceProperties::create([
+            WebResourceProperties::ARG_CONTENT => $content,
+        ]));
+
+        if ($contentType) {
+            $webPage = $webPage->setContentType($contentType);
+        }
+
+        $this->assertSame($expectedCharacterSet, $webPage->getCharacterSet());
+    }
+
+    public function getCharacterSetForWebPageCreatedFromContentHasCharacterSetDataProvider(): array
+    {
+        FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
+
+        return [
+            'present in document meta, no content type' => [
                 'content' => FixtureLoader::load('empty-document-with-valid-meta-charset.html'),
                 'expectedCharacterSet' => 'utf-8',
+                'contentType' => null,
+            ],
+            'missing in document meta, present in content type' => [
+                'content' => FixtureLoader::load('empty-document.html'),
+                'expectedCharacterSet' => 'utf-8',
+                'contentType' => $this->createContentType('text/html; charset=utf-8'),
             ],
         ];
     }
@@ -296,7 +342,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                     $this->createUri('http://example.com/'),
                     $this->createResponse(
                         'text/html; charset=utf-8',
-                        $this->createFoo("κόσμε")
+                        $this->createMarkupContainingFragment("κόσμε")
                     )
                 ),
                 'expectedEncodingIsValid' => true,
@@ -316,7 +362,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                     $this->createUri('http://example.com/'),
                     $this->createResponse(
                         'text/html; charset=utf-8',
-                        $this->createFoo("hi∑")
+                        $this->createMarkupContainingFragment("hi∑")
                     )
                 ),
                 'expectedEncodingIsValid' => true,
@@ -326,7 +372,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                     $this->createUri('http://example.com/'),
                     $this->createResponse(
                         'text/html; charset=windows-1252',
-                        $this->createFoo("hi∑")
+                        $this->createMarkupContainingFragment("hi∑")
                     )
                 ),
                 'expectedEncodingIsValid' => false,
@@ -365,11 +411,17 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         return $uri;
     }
 
-    private function createFoo(string $fragment)
+    private function createMarkupContainingFragment(string $fragment)
     {
         return sprintf(
             '<!doctype html><html lang="en"><head><title>%s</title></head></html>',
             $fragment
         );
+    }
+
+    private function createContentType(string $contentTypeString): InternetMediaTypeInterface
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return (new ContentTypeParser())->parse($contentTypeString);
     }
 }
