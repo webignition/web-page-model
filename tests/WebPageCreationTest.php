@@ -2,6 +2,7 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
+use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -178,6 +179,12 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @param string $content
+     * @param string $responseContentTypeHeader
+     *
+     * @return MockInterface|ResponseInterface
+     */
     private function createResponse(string $content, string $responseContentTypeHeader)
     {
         $responseBody = \Mockery::mock(StreamInterface::class);

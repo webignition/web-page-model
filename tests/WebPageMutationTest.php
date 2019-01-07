@@ -1,13 +1,10 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 
 namespace webignition\Tests\WebResource\WebPage;
 
 use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
-use webignition\WebPageInspector\UnparseableContentTypeException;
-use webignition\WebResource\Exception\InvalidContentTypeException;
-use webignition\WebResource\Exception\ReadOnlyResponseException;
-use webignition\WebResource\Exception\UnseekableResponseException;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
 
@@ -32,10 +29,6 @@ class WebPageMutationTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals(spl_object_hash($this->webPage), spl_object_hash($this->updatedWebPage));
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testSetUri()
     {
         $currentUri = \Mockery::mock(UriInterface::class);
@@ -63,10 +56,6 @@ class WebPageMutationTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->updatedWebPage->getResponse());
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testSetContentTypeValidContentType()
     {
         $this->webPage = new WebPage();
@@ -91,12 +80,6 @@ class WebPageMutationTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->updatedWebPage->getResponse());
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     * @throws ReadOnlyResponseException
-     * @throws UnseekableResponseException
-     */
     public function testSetContent()
     {
         $currentContent = 'current content';
