@@ -125,11 +125,12 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'missing in document meta, missing in content type' => [
                 'content' => FixtureLoader::load('empty-document.html'),
-                'contentType' => $this->createContentType('text/html'),
             ],
             'invalid in document meta, missing in content type' => [
                 'content' => FixtureLoader::load('empty-document-with-invalid-meta-charset.html'),
-                'contentType' => $this->createContentType('text/html'),
+            ],
+            'unparseable content type' => [
+                'content' => FixtureLoader::load('empty-document-with-unparseable-content-type.html'),
             ],
         ];
     }
@@ -224,6 +225,20 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                     FixtureLoader::load('document-with-big5-charset.html')
                 ),
                 'expectedCharacterSet' => 'big5',
+            ),
+            'unparseable content type in content, no character set in response' => array(
+                'response' => $this->createResponse(
+                    'text/html',
+                    FixtureLoader::load('empty-document-with-unparseable-content-type.html')
+                ),
+                'expectedCharacterSet' => null,
+            ),
+            'unparseable content type in content, has character set in response' => array(
+                'response' => $this->createResponse(
+                    'text/html; charset=utf-8',
+                    FixtureLoader::load('empty-document-with-unparseable-content-type.html')
+                ),
+                'expectedCharacterSet' => 'utf-8',
             ),
         ];
     }

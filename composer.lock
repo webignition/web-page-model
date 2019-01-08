@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f95061f8d853fe4b99d855c3c809023e",
+    "content-hash": "ff81a39335d7a2265f830e9c12419d60",
     "packages": [
         {
             "name": "etechnika/idna-convert",
@@ -756,16 +756,16 @@
         },
         {
             "name": "webignition/web-page-inspector",
-            "version": "0.6",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-page-inspector.git",
-                "reference": "778ac9a60d1a0fb52bdd059acdc7bf0bf662ef69"
+                "reference": "238020662cefa5631f8c972abd1b6820d0767d1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/778ac9a60d1a0fb52bdd059acdc7bf0bf662ef69",
-                "reference": "778ac9a60d1a0fb52bdd059acdc7bf0bf662ef69",
+                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/238020662cefa5631f8c972abd1b6820d0767d1f",
+                "reference": "238020662cefa5631f8c972abd1b6820d0767d1f",
                 "shasum": ""
             },
             "require": {
@@ -803,7 +803,7 @@
                 "inspector",
                 "webpage"
             ],
-            "time": "2018-10-12T17:35:30+00:00"
+            "time": "2019-01-08T10:30:29+00:00"
         },
         {
             "name": "webignition/web-resource-interfaces",

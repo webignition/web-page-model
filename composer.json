@@ -36,7 +36,7 @@
         "webignition/internet-media-type-interface":"^0.4",
         "webignition/internet-media-type":"^2",
         "webignition/character-set-list":"^0.2",
-        "webignition/web-page-inspector": ">=0.3,<1",
+        "webignition/web-page-inspector": ">=1,<2",
         "webignition/absolute-url-deriver": ">=2,<3"
     },
     "require-dev": {
