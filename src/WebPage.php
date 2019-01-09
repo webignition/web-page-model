@@ -7,7 +7,7 @@ use webignition\AbsoluteUrlDeriver\AbsoluteUrlDeriver;
 use webignition\CharacterSetList\CharacterSetList;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
-use webignition\WebPageInspector\UnparseableContentTypeException;
+use webignition\Uri\Uri;
 use webignition\WebPageInspector\WebPageInspector;
 use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\WebResource;
@@ -35,7 +35,6 @@ class WebPage extends WebResource implements WebPageInterface
      * @param WebResourcePropertiesInterface $properties
      *
      * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
      */
     public function __construct(?WebResourcePropertiesInterface $properties = null)
     {
@@ -102,15 +101,16 @@ class WebPage extends WebResource implements WebPageInterface
     {
         $crawler = $this->inspector->getCrawler();
         $baseElementCrawler = $crawler->filter('base');
-        $thisUri = (string)$this->getUri();
+        $thisUri = (string) $this->getUri();
 
         if (1 === $baseElementCrawler->count()) {
             $hrefAttribute = trim($baseElementCrawler->attr('href'));
 
             if (!empty($hrefAttribute)) {
-                $absoluteUrlDeriver = new AbsoluteUrlDeriver($hrefAttribute, $thisUri);
-
-                return (string)$absoluteUrlDeriver->getAbsoluteUrl();
+                return (string) AbsoluteUrlDeriver::derive(
+                    new Uri($thisUri),
+                    new Uri($hrefAttribute)
+                );
             }
         }
 
