@@ -46,6 +46,15 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ]));
     }
 
+    public function testCreateFromContentInvalidContentType()
+    {
+        $this->expectException(InvalidContentTypeException::class);
+        $this->expectExceptionCode(InvalidContentTypeException::CODE);
+        $this->expectExceptionMessage('Invalid content type "image/png"');
+
+        WebPage::createFromContent('', new InternetMediaType('image', 'png'));
+    }
+
     public function testSetContentTypeInvalidContentType()
     {
         $webPage = new WebPage(WebResourceProperties::create([]));

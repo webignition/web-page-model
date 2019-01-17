@@ -1,4 +1,7 @@
 <?php
+/** @noinspection PhpDocSignatureInspection */
+/** @noinspection PhpDocMissingThrowsInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 
 namespace webignition\Tests\WebResource\WebPage;
 
@@ -7,9 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
+use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
-use webignition\WebPageInspector\UnparseableContentTypeException;
-use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
 
@@ -27,10 +29,6 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(WebPage::class, $this->webPage);
     }
 
-    /**
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
-     */
     public function testCreateWithNoArgs()
     {
         $this->webPage = new WebPage();
@@ -42,27 +40,48 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws InvalidContentTypeException
+     * @dataProvider createFromContentDataProvider
      */
-    public function testCreateFromContent()
-    {
-        $content = '';
-
-        $this->webPage = WebPage::createFromContent($content);
+    public function testCreateFromContent(
+        string $content,
+        ?InternetMediaTypeInterface $contentType,
+        string $expectedContentType
+    ) {
+        $this->webPage = WebPage::createFromContent($content, $contentType);
 
         $this->assertEquals($content, $this->webPage->getContent());
-        $this->assertEquals('text/html', (string)$this->webPage->getContentType());
+        $this->assertEquals($expectedContentType, (string) $this->webPage->getContentType());
         $this->assertNull($this->webPage->getResponse());
     }
 
+    public function createFromContentDataProvider(): array
+    {
+        return [
+            'no content type' => [
+                'content' => '',
+                'contentType' => null,
+                'expectedContentType' => 'text/html',
+            ],
+            'text/html content type' => [
+                'content' => '',
+                'contentType' => $this->createInternetMediaType('text/html'),
+                'expectedContentType' => 'text/html',
+            ],
+            'text/html; charset=utf-8 content type' => [
+                'content' => '',
+                'contentType' => $this->createInternetMediaType('text/html; charset=utf-8'),
+                'expectedContentType' => 'text/html; charset=utf-8',
+            ],
+            'text/html; charset=big5 content type' => [
+                'content' => '',
+                'contentType' => $this->createInternetMediaType('text/html; charset=big5'),
+                'expectedContentType' => 'text/html; charset=big5',
+            ],
+        ];
+    }
 
     /**
      * @dataProvider createWithResponseDataProvider
-     *
-     * @param string $responseContentTypeHeader
-     * @param string $expectedContentTypeString
-     *
-     * @throws InvalidContentTypeException
      */
     public function testCreateFromResponse(string $responseContentTypeHeader, string $expectedContentTypeString)
     {
@@ -80,12 +99,6 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createWithContentDataProvider
-     *
-     * @param InternetMediaTypeInterface|null $contentType
-     * @param string $expectedContentTypeString
-     *
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
      */
     public function testCreateWithContent(?InternetMediaTypeInterface $contentType, string $expectedContentTypeString)
     {
@@ -133,12 +146,6 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createWithResponseDataProvider
-     *
-     * @param string $responseContentTypeHeader
-     * @param string $expectedContentTypeString
-     *
-     * @throws InvalidContentTypeException
-     * @throws UnparseableContentTypeException
      */
     public function testCreateWithResponse(string $responseContentTypeHeader, string $expectedContentTypeString)
     {
@@ -180,9 +187,6 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $content
-     * @param string $responseContentTypeHeader
-     *
      * @return MockInterface|ResponseInterface
      */
     private function createResponse(string $content, string $responseContentTypeHeader)
@@ -203,5 +207,12 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
             ->andReturn($responseBody);
 
         return $response;
+    }
+
+    private function createInternetMediaType(string $contentType): InternetMediaTypeInterface
+    {
+        $parser = new ContentTypeParser();
+
+        return $parser->parse($contentType);
     }
 }

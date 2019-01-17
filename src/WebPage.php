@@ -47,7 +47,7 @@ class WebPage extends WebResource implements WebPageInterface
         string $content,
         ?InternetMediaTypeInterface $contentType = null
     ) : WebResourceInterface {
-        $contentType = static::getDefaultContentType();
+        $contentType = $contentType ?? static::getDefaultContentType();
 
         return parent::createFromContent($content, $contentType);
     }
