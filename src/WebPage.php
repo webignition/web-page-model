@@ -83,13 +83,13 @@ class WebPage extends WebResource implements WebPageInterface
         $characterSetList = new CharacterSetList();
 
         $documentCharacterSet = $this->inspector->getCharacterSet();
-        if ($characterSetList->contains($documentCharacterSet)) {
+        if ($documentCharacterSet && $characterSetList->contains($documentCharacterSet)) {
             return $documentCharacterSet;
         }
 
         if (!empty($this->getContentType())) {
             $responseCharacterSet = $this->getContentTypeCharacterSet();
-            if ($characterSetList->contains($responseCharacterSet)) {
+            if ($responseCharacterSet && $characterSetList->contains($responseCharacterSet)) {
                 return $responseCharacterSet;
             }
         }
@@ -120,17 +120,28 @@ class WebPage extends WebResource implements WebPageInterface
     private function getContentTypeCharacterSet(): ?string
     {
         $contentType = $this->getContentType();
+        if (null === $contentType) {
+            return null;
+        }
 
         if (!$contentType->hasParameter(self::CHARACTER_SET_PARAMETER)) {
             return null;
         }
 
-        return $contentType->getParameter(self::CHARACTER_SET_PARAMETER)->getValue();
+        $characterSetParameter = $contentType->getParameter(self::CHARACTER_SET_PARAMETER);
+        if (null === $characterSetParameter) {
+            return null;
+        }
+
+        return $characterSetParameter->getValue();
     }
 
     public function isEncodingValid(): bool
     {
         $content = $this->getContent();
+        if (empty($content)) {
+            return true;
+        }
 
         $detectedEncoding = mb_detect_encoding($content, $this->getCharacterSet(), true);
 

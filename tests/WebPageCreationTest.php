@@ -10,15 +10,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
-use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
+use webignition\WebResourceInterfaces\WebResourceInterface;
 
 class WebPageCreationTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var WebPage
+     * @var WebPage|WebResourceInterface
      */
     private $webPage;
 
@@ -64,17 +64,17 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
             ],
             'text/html content type' => [
                 'content' => '',
-                'contentType' => $this->createInternetMediaType('text/html'),
+                'contentType' => ContentTypeFactory::createFromString('text/html'),
                 'expectedContentType' => 'text/html',
             ],
             'text/html; charset=utf-8 content type' => [
                 'content' => '',
-                'contentType' => $this->createInternetMediaType('text/html; charset=utf-8'),
+                'contentType' => ContentTypeFactory::createFromString('text/html; charset=utf-8'),
                 'expectedContentType' => 'text/html; charset=utf-8',
             ],
             'text/html; charset=big5 content type' => [
                 'content' => '',
-                'contentType' => $this->createInternetMediaType('text/html; charset=big5'),
+                'contentType' => ContentTypeFactory::createFromString('text/html; charset=big5'),
                 'expectedContentType' => 'text/html; charset=big5',
             ],
         ];
@@ -207,12 +207,5 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
             ->andReturn($responseBody);
 
         return $response;
-    }
-
-    private function createInternetMediaType(string $contentType): InternetMediaTypeInterface
-    {
-        $parser = new ContentTypeParser();
-
-        return $parser->parse($contentType);
     }
 }

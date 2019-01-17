@@ -16,7 +16,6 @@ use webignition\WebResource\Exception\InvalidContentTypeException;
 use webignition\WebResource\TestingTools\FixtureLoader;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
-use webignition\InternetMediaType\Parser\Parser as ContentTypeParser;
 
 class WebPageTest extends \PHPUnit\Framework\TestCase
 {
@@ -70,9 +69,9 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider setContentTypeDataProvider
      */
-    public function testSetContentTypeFoo(InternetMediaType $contentType, ?string $expectedCharacterSet)
+    public function testSetContentType(InternetMediaType $contentType, ?string $expectedCharacterSet)
     {
-        $initialContentType = $this->createContentType('text/html');
+        $initialContentType = ContentTypeFactory::createFromString('text/html');
 
         $webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_CONTENT => '',
@@ -82,26 +81,28 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('text/html', (string) $webPage->getContentType());
         $this->assertNull($webPage->getCharacterSet());
 
-        /* @var WebPage $webPage */
         $webPage = $webPage->setContentType($contentType);
 
         $this->assertSame($contentType, $webPage->getContentType());
-        $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
+
+        if ($webPage instanceof WebPage) {
+            $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
+        }
     }
 
     public function setContentTypeDataProvider(): array
     {
         return [
             'no character set' => [
-                'contentType' => $this->createContentType('text/html'),
+                'contentType' => ContentTypeFactory::createFromString('text/html'),
                 'expectedCharacterSet' => null,
             ],
             'utf-8 character set' => [
-                'contentType' => $this->createContentType('text/html; charset=utf-8'),
+                'contentType' => ContentTypeFactory::createFromString('text/html; charset=utf-8'),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'big5 character set' => [
-                'contentType' => $this->createContentType('text/html; charset=big5'),
+                'contentType' => ContentTypeFactory::createFromString('text/html; charset=big5'),
                 'expectedCharacterSet' => 'big5',
             ],
         ];
@@ -210,7 +211,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             'missing in document meta, present in content type' => [
                 'content' => FixtureLoader::load('empty-document.html'),
                 'expectedCharacterSet' => 'utf-8',
-                'contentType' => $this->createContentType('text/html; charset=utf-8'),
+                'contentType' => ContentTypeFactory::createFromString('text/html; charset=utf-8'),
             ],
         ];
     }
@@ -475,11 +476,5 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             '<!doctype html><html lang="en"><head><title>%s</title></head></html>',
             $fragment
         );
-    }
-
-    private function createContentType(string $contentTypeString): InternetMediaTypeInterface
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return (new ContentTypeParser())->parse($contentTypeString);
     }
 }

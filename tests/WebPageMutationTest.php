@@ -7,16 +7,17 @@ use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
+use webignition\WebResourceInterfaces\WebResourceInterface;
 
 class WebPageMutationTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var WebPage
+     * @var WebPage|WebResourceInterface
      */
     private $webPage;
 
     /**
-     * @var WebPage
+     * @var WebPage|WebResourceInterface
      */
     private $updatedWebPage;
 
