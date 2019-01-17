@@ -67,6 +67,46 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         $webPage->setContentType(new InternetMediaType('application', 'octetstream'));
     }
 
+    /**
+     * @dataProvider setContentTypeDataProvider
+     */
+    public function testSetContentTypeFoo(InternetMediaType $contentType, ?string $expectedCharacterSet)
+    {
+        $initialContentType = $this->createContentType('text/html');
+
+        $webPage = new WebPage(WebResourceProperties::create([
+            WebResourceProperties::ARG_CONTENT => '',
+            WebResourceProperties::ARG_CONTENT_TYPE => $initialContentType,
+        ]));
+
+        $this->assertEquals('text/html', (string) $webPage->getContentType());
+        $this->assertNull($webPage->getCharacterSet());
+
+        /* @var WebPage $webPage */
+        $webPage = $webPage->setContentType($contentType);
+
+        $this->assertSame($contentType, $webPage->getContentType());
+        $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
+    }
+
+    public function setContentTypeDataProvider(): array
+    {
+        return [
+            'no character set' => [
+                'contentType' => $this->createContentType('text/html'),
+                'expectedCharacterSet' => null,
+            ],
+            'utf-8 character set' => [
+                'contentType' => $this->createContentType('text/html; charset=utf-8'),
+                'expectedCharacterSet' => 'utf-8',
+            ],
+            'big5 character set' => [
+                'contentType' => $this->createContentType('text/html; charset=big5'),
+                'expectedCharacterSet' => 'big5',
+            ],
+        ];
+    }
+
     public function testSetResponseWithInvalidContentType()
     {
         $responseBody = \Mockery::mock(StreamInterface::class);
@@ -109,11 +149,8 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
     ) {
         $webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_CONTENT => $content,
+            WebResourceProperties::ARG_CONTENT_TYPE => $contentType
         ]));
-
-        if ($contentType) {
-            $webPage = $webPage->setContentType($contentType);
-        }
 
         $this->assertNull($webPage->getCharacterSet());
     }
@@ -154,11 +191,8 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
     ) {
         $webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_CONTENT => $content,
+            WebResourceProperties::ARG_CONTENT_TYPE => $contentType,
         ]));
-
-        if ($contentType) {
-            $webPage = $webPage->setContentType($contentType);
-        }
 
         $this->assertSame($expectedCharacterSet, $webPage->getCharacterSet());
     }
