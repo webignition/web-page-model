@@ -39,7 +39,8 @@
         "webignition/internet-media-type":"^2",
         "webignition/character-set-list":"^0.2",
         "webignition/web-page-inspector": ">=1,<2",
-        "webignition/absolute-url-deriver": ">=3,<4"
+        "webignition/absolute-url-deriver": ">=3,<4",
+        "webignition/stream-factory": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7",

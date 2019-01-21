@@ -154,18 +154,6 @@ class WebPage extends WebResource implements WebPageInterface
         return $characterSetParameter->getValue();
     }
 
-    public function isEncodingValid(): bool
-    {
-        $content = $this->getContent();
-        if (empty($content)) {
-            return true;
-        }
-
-        $detectedEncoding = mb_detect_encoding($content, $this->getCharacterSet(), true);
-
-        return is_string($detectedEncoding);
-    }
-
     public static function models(InternetMediaTypeInterface $internetMediaType): bool
     {
         return in_array($internetMediaType->getTypeSubtypeString(), self::getModelledContentTypeStrings());
