@@ -3,8 +3,8 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
-use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
+use webignition\Uri\Uri;
 use webignition\WebResource\WebPage\WebPage;
 use webignition\WebResource\WebResourceProperties;
 use webignition\WebResourceInterfaces\WebResourceInterface;
@@ -32,8 +32,8 @@ class WebPageMutationTest extends \PHPUnit\Framework\TestCase
 
     public function testSetUri()
     {
-        $currentUri = \Mockery::mock(UriInterface::class);
-        $newUri = \Mockery::mock(UriInterface::class);
+        $currentUri = new Uri('');
+        $newUri = new Uri('');
 
         $this->webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_URI => $currentUri,

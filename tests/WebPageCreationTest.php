@@ -5,10 +5,8 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
-use Mockery\MockInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Uri;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\WebResource\WebPage\WebPage;
@@ -86,8 +84,8 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
     public function testCreateFromResponse(string $responseContentTypeHeader, string $expectedContentTypeString)
     {
         $content = 'web page content';
-        $uri = \Mockery::mock(UriInterface::class);
-        $response = $this->createResponse($content, $responseContentTypeHeader);
+        $uri = new Uri();
+        $response = new Response(200, ['content-type' => $responseContentTypeHeader], $content);
 
         $this->webPage = WebPage::createFromResponse($uri, $response);
 
@@ -102,8 +100,7 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateWithContent(?InternetMediaTypeInterface $contentType, string $expectedContentTypeString)
     {
-        $uri = \Mockery::mock(UriInterface::class);
-
+        $uri = new Uri();
         $content = 'web page content';
 
         $this->webPage = new WebPage(WebResourceProperties::create([
@@ -150,8 +147,8 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
     public function testCreateWithResponse(string $responseContentTypeHeader, string $expectedContentTypeString)
     {
         $content = 'web page content';
-        $uri = \Mockery::mock(UriInterface::class);
-        $response = $this->createResponse($content, $responseContentTypeHeader);
+        $uri = new Uri();
+        $response = new Response(200, ['content-type' => $responseContentTypeHeader], $content);
 
         $this->webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_URI => $uri,
@@ -184,28 +181,5 @@ class WebPageCreationTest extends \PHPUnit\Framework\TestCase
                 'expectedContentTypeString' => 'application/xhtml+xml',
             ],
         ];
-    }
-
-    /**
-     * @return MockInterface|ResponseInterface
-     */
-    private function createResponse(string $content, string $responseContentTypeHeader)
-    {
-        $responseBody = \Mockery::mock(StreamInterface::class);
-        $responseBody
-            ->shouldReceive('__toString')
-            ->andReturn($content);
-
-        $response = \Mockery::mock(ResponseInterface::class);
-        $response
-            ->shouldReceive('getHeaderLine')
-            ->with(WebPage::HEADER_CONTENT_TYPE)
-            ->andReturn($responseContentTypeHeader);
-
-        $response
-            ->shouldReceive('getBody')
-            ->andReturn($responseBody);
-
-        return $response;
     }
 }

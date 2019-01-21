@@ -5,10 +5,9 @@
 
 namespace webignition\Tests\WebResource\WebPage;
 
-use Mockery\MockInterface;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
 use webignition\InternetMediaType\InternetMediaType;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 use webignition\WebPageInspector\WebPageInspector;
@@ -31,11 +30,7 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateWithResponseWithInvalidContentType()
     {
-        $response = \Mockery::mock(ResponseInterface::class);
-        $response
-            ->shouldReceive('getHeaderLine')
-            ->with(WebPage::HEADER_CONTENT_TYPE)
-            ->andReturn('image/jpg');
+        $response = new Response(200, ['content-type' => 'image/jpg']);
 
         $this->expectException(InvalidContentTypeException::class);
         $this->expectExceptionMessage('Invalid content type "image/jpg"');
@@ -110,26 +105,8 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
     public function testSetResponseWithInvalidContentType()
     {
-        $responseBody = \Mockery::mock(StreamInterface::class);
-        $responseBody
-            ->shouldReceive('__toString')
-            ->andReturn('');
-
-        $currentResponse = \Mockery::mock(ResponseInterface::class);
-        $currentResponse
-            ->shouldReceive('getHeaderLine')
-            ->with(WebPage::HEADER_CONTENT_TYPE)
-            ->andReturn('text/html');
-
-        $currentResponse
-            ->shouldReceive('getBody')
-            ->andReturn($responseBody);
-
-        $newResponse = \Mockery::mock(ResponseInterface::class);
-        $newResponse
-            ->shouldReceive('getHeaderLine')
-            ->with(WebPage::HEADER_CONTENT_TYPE)
-            ->andReturn('image/jpg');
+        $currentResponse = new Response(200, ['content-type' => 'text/html']);
+        $newResponse = new Response(200, ['content-type' => 'image/jpg']);
 
         $webPage = new WebPage(WebResourceProperties::create([
             WebResourceProperties::ARG_RESPONSE => $currentResponse,
@@ -236,50 +213,57 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
 
         return [
             'no character set in content, no character set in response' => [
-                'response' => $this->createResponse(
-                    'text/html',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html'],
                     FixtureLoader::load('empty-document.html')
                 ),
                 'expectedCharacterSet' => null,
             ],
             'no character set in content, has character set in response' => [
-                'response' => $this->createResponse(
-                    'text/html; charset=utf-8',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
                     FixtureLoader::load('empty-document.html')
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'invalid character set in content, has character set in response' => [
-                'response' => $this->createResponse(
-                    'text/html; charset=utf-8',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
                     FixtureLoader::load('empty-document-with-invalid-meta-charset.html')
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ],
             'has character set in content, no character set in response' => array(
-                'response' => $this->createResponse(
-                    'text/html',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html'],
                     FixtureLoader::load('empty-document-with-valid-meta-charset.html')
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ),
             'character set in content overrides character set in response' => array(
-                'response' => $this->createResponse(
-                    'text/html; charset=utf-8',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
                     FixtureLoader::load('document-with-big5-charset.html')
                 ),
                 'expectedCharacterSet' => 'big5',
             ),
             'unparseable content type in content, no character set in response' => array(
-                'response' => $this->createResponse(
-                    'text/html',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html'],
                     FixtureLoader::load('empty-document-with-unparseable-content-type.html')
                 ),
                 'expectedCharacterSet' => null,
             ),
             'unparseable content type in content, has character set in response' => array(
-                'response' => $this->createResponse(
-                    'text/html; charset=utf-8',
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
                     FixtureLoader::load('empty-document-with-unparseable-content-type.html')
                 ),
                 'expectedCharacterSet' => 'utf-8',
@@ -297,9 +281,17 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getBaseUrlDataProvider
      */
-    public function testGetBaseUrl(WebPage $webPage, ?string $expectedBaseUrl)
+    public function testGetBaseUrl(string $content, Uri $uri, ?string $expectedBaseUrl)
     {
-        $this->assertSame($expectedBaseUrl, $webPage->getBaseUrl());
+        /* @var WebPage $webPage */
+        $webPage = WebPage::createFromResponse(
+            $uri,
+            new Response(200, ['content-type' => 'text/html'], $content)
+        );
+
+        if ($webPage instanceof  WebPage) {
+            $this->assertSame($expectedBaseUrl, $webPage->getBaseUrl());
+        }
     }
 
     public function getBaseUrlDataProvider(): array
@@ -307,43 +299,34 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         FixtureLoader::$fixturePath = __DIR__ . '/Fixtures';
 
         return [
-            'empty content' => [
-                'webPage' => WebPage::createFromContent(''),
+            'empty content, empty uri' => [
+                'content' => '',
+                'uri' => new Uri(),
                 'expectedBaseUrl' => null,
             ],
-            'response without base element' => [
-                'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', '')
-                ),
+            'empty content, non-empty uri' => [
+                'content' => '',
+                'uri' => new Uri('http://example.com/'),
                 'expectedBaseUrl' => 'http://example.com/',
             ],
-            'response without empty element' => [
-                'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('empty-base-element.html'))
-                ),
+            'empty base element' => [
+                'content' => FixtureLoader::load('empty-base-element.html'),
+                'uri' => new Uri('http://example.com/'),
                 'expectedBaseUrl' => 'http://example.com/',
             ],
-            'response with empty element' => [
-                'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('base-element.html'))
-                ),
+            'non-empty base element' => [
+                'content' => FixtureLoader::load('base-element.html'),
+                'uri' => new Uri('http://example.com/'),
                 'expectedBaseUrl' => 'http://base.example.com/foobar/',
             ],
-            'response with root-relative element' => [
-                'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('root-relative-base-element.html'))
-                ),
+            'root-relative base element' => [
+                'content' => FixtureLoader::load('root-relative-base-element.html'),
+                'uri' => new Uri('http://example.com/'),
                 'expectedBaseUrl' => 'http://example.com/',
             ],
-            'response with relative element' => [
-                'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('relative-base-element.html'))
-                ),
+            'relative base element' => [
+                'content' => FixtureLoader::load('relative-base-element.html'),
+                'uri' => new Uri('http://example.com/'),
                 'expectedBaseUrl' => 'http://example.com/foo',
             ],
         ];
@@ -368,8 +351,8 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'all-ascii empty document has valid encoding (with response)' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('empty-document.html'))
+                    new Uri('http://example.com/'),
+                    new Response(200, ['content-type' => 'text/html'], FixtureLoader::load('empty-document.html'))
                 ),
                 'expectedEncodingIsValid' => true,
             ],
@@ -381,16 +364,21 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'big5-encoded document has valid encoding (with response)' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse('text/html', FixtureLoader::load('document-with-big5-charset.html'))
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html'],
+                        FixtureLoader::load('document-with-big5-charset.html')
+                    )
                 ),
                 'expectedEncodingIsValid' => true,
             ],
             'gb2312-encoded document has valid encoding' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse(
-                        'text/html',
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html'],
                         FixtureLoader::load('document-with-script-elements-charset=gb2312.html')
                     )
                 ),
@@ -398,9 +386,10 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'greek kosme is valid utf-8' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse(
-                        'text/html; charset=utf-8',
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html; charset=utf-8'],
                         $this->createMarkupContainingFragment("κόσμε")
                     )
                 ),
@@ -408,9 +397,10 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'invalidly-encoded windows-1251 document is not valid windows-1251' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse(
-                        'text/html; charset=utf-8',
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html; charset=utf-8'],
                         FixtureLoader::load('document-with-invalid-windows-1251-encoding.html')
                     )
                 ),
@@ -418,9 +408,10 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'hi∑ is not valid utf-8' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse(
-                        'text/html; charset=utf-8',
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html; charset=utf-8'],
                         $this->createMarkupContainingFragment("hi∑")
                     )
                 ),
@@ -428,46 +419,16 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
             ],
             'hi∑ is not valid windows-1252' => [
                 'webPage' => WebPage::createFromResponse(
-                    $this->createUri('http://example.com/'),
-                    $this->createResponse(
-                        'text/html; charset=windows-1252',
+                    new Uri('http://example.com/'),
+                    new Response(
+                        200,
+                        ['content-type' => 'text/html; charset=windows-1252'],
                         $this->createMarkupContainingFragment("hi∑")
                     )
                 ),
                 'expectedEncodingIsValid' => false,
             ],
         ];
-    }
-
-    private function createResponse(string $contentTypeHeader, string $content): ResponseInterface
-    {
-        $responseBody = \Mockery::mock(StreamInterface::class);
-        $responseBody
-            ->shouldReceive('__toString')
-            ->andReturn($content);
-
-        /* @var ResponseInterface|MockInterface $response */
-        $response = \Mockery::mock(ResponseInterface::class);
-        $response
-            ->shouldReceive('getHeaderLine')
-            ->with(WebPage::HEADER_CONTENT_TYPE)
-            ->andReturn($contentTypeHeader);
-
-        $response
-            ->shouldReceive('getBody')
-            ->andReturn($responseBody);
-
-        return $response;
-    }
-
-    private function createUri(string $uriString)
-    {
-        $uri = \Mockery::mock(UriInterface::class);
-        $uri
-            ->shouldReceive('__toString')
-            ->andReturn($uriString);
-
-        return $uri;
     }
 
     private function createMarkupContainingFragment(string $fragment)
