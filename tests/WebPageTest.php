@@ -268,6 +268,26 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
                 ),
                 'expectedCharacterSet' => 'utf-8',
             ),
+            'incorrectly-encoded document with gb2312 charset in page' => array(
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
+                    FixtureLoader::load('document-with-script-elements-charset=gb2312.html')
+                ),
+                'expectedCharacterSet' => 'gb2312',
+            ),
+            'utf-8 document converted from gb2312 with gb2312 charset in page' => array(
+                'response' => new Response(
+                    200,
+                    ['content-type' => 'text/html; charset=utf-8'],
+                    mb_convert_encoding(
+                        FixtureLoader::load('document-with-script-elements-charset=gb2312.html'),
+                        'utf-8',
+                        'gb2312'
+                    )
+                ),
+                'expectedCharacterSet' => 'gb2312',
+            ),
         ];
     }
 

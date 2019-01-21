@@ -757,16 +757,16 @@
         },
         {
             "name": "webignition/web-page-inspector",
-            "version": "1.0",
+            "version": "1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/web-page-inspector.git",
-                "reference": "238020662cefa5631f8c972abd1b6820d0767d1f"
+                "reference": "e48e5387e17ada24d6d6922f4e6334675a252fd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/238020662cefa5631f8c972abd1b6820d0767d1f",
-                "reference": "238020662cefa5631f8c972abd1b6820d0767d1f",
+                "url": "https://api.github.com/repos/webignition/web-page-inspector/zipball/e48e5387e17ada24d6d6922f4e6334675a252fd5",
+                "reference": "e48e5387e17ada24d6d6922f4e6334675a252fd5",
                 "shasum": ""
             },
             "require": {
@@ -779,6 +779,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1",
+                "phpstan/phpstan-mockery": "^0.10.2",
                 "phpunit/phpunit": "^7",
                 "squizlabs/php_codesniffer": "^3"
             },
@@ -804,7 +805,7 @@
                 "inspector",
                 "webpage"
             ],
-            "time": "2019-01-08T10:30:29+00:00"
+            "time": "2019-01-21T21:29:53+00:00"
         },
         {
             "name": "webignition/web-resource-interfaces",
