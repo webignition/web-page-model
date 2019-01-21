@@ -431,6 +431,115 @@ class WebPageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @dataProvider getCharacterEncodingDataProvider
+     */
+    public function testGetCharacterEncoding(
+        WebPage $webPage,
+        ?string $expectedCharacterEncoding,
+        ?string $expectedCharacterSet
+    ) {
+        $this->assertEquals($expectedCharacterEncoding, $webPage->getCharacterEncoding());
+        $this->assertEquals($expectedCharacterSet, $webPage->getCharacterSet());
+    }
+
+    public function getCharacterEncodingDataProvider(): array
+    {
+        return [
+            'ascii' => [
+                'webPage' => WebPage::createFromContent(
+                    $this->createMarkupContainingFragment('')
+                ),
+                'expectedCharacterEncoding' => 'ascii',
+                'expectedCharacterSet' => null,
+            ],
+            'utf-8' => [
+                'webPage' => WebPage::createFromContent(
+                    $this->createMarkupContainingFragment('hi∑')
+                ),
+                'expectedCharacterEncoding' => 'utf-8',
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "search", utf-8' => [
+                'webPage' => WebPage::createFromContent(
+                    $this->createMarkupContainingFragment('搜')
+                ),
+                'expectedCharacterEncoding' => 'utf-8',
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "search", big5, from content' => [
+                'webPage' => WebPage::createFromContent(
+                    FixtureLoader::load('document-with-big5-charset.html')
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => 'big5',
+            ],
+            'chinese "search", big5, from re-encoded content' => [
+                'webPage' => WebPage::createFromContent(
+                    iconv('big5', 'utf-8', FixtureLoader::load('document-with-big5-charset.html'))
+                ),
+                'expectedCharacterEncoding' => 'utf-8',
+                'expectedCharacterSet' => 'big5',
+            ],
+            'chinese "search", big5, mb_convert_encoding' => [
+                'webPage' => WebPage::createFromContent(
+                    mb_convert_encoding($this->createMarkupContainingFragment('搜'), 'big5', 'utf-8')
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "search", big5, iconv' => [
+                'webPage' => WebPage::createFromContent(
+                    iconv('utf-8', 'big5', $this->createMarkupContainingFragment('搜'))
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "search", gb2312, mb_convert_encoding' => [
+                'webPage' => WebPage::createFromContent(
+                    mb_convert_encoding($this->createMarkupContainingFragment('搜'), 'gb2312', 'utf-8')
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "search", gb2312, iconv' => [
+                'webPage' => WebPage::createFromContent(
+                    iconv('utf-8', 'gb2312', $this->createMarkupContainingFragment('搜'))
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "cross", big5, mb_convert_encoding' => [
+                'webPage' => WebPage::createFromContent(
+                    mb_convert_encoding($this->createMarkupContainingFragment('交'), 'big5', 'utf-8')
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "cross", big5, iconv' => [
+                'webPage' => WebPage::createFromContent(
+                    iconv('utf-8', 'big5', $this->createMarkupContainingFragment('交'))
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "cross", gb2312, mb_convert_encoding' => [
+                'webPage' => WebPage::createFromContent(
+                    mb_convert_encoding($this->createMarkupContainingFragment('交'), 'gb2312', 'utf-8')
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+            'chinese "cross", gb2312, iconv' => [
+                'webPage' => WebPage::createFromContent(
+                    iconv('utf-8', 'gb2312', $this->createMarkupContainingFragment('交'))
+                ),
+                'expectedCharacterEncoding' => null,
+                'expectedCharacterSet' => null,
+            ],
+        ];
+    }
+
     private function createMarkupContainingFragment(string $fragment)
     {
         return sprintf(

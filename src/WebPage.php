@@ -32,6 +32,11 @@ class WebPage extends WebResource implements WebPageInterface
     private $characterSet;
 
     /**
+     * @var string|null
+     */
+    private $characterEncoding;
+
+    /**
      * @param WebResourcePropertiesInterface $properties
      *
      * @throws InvalidContentTypeException
@@ -76,6 +81,19 @@ class WebPage extends WebResource implements WebPageInterface
         }
 
         return $this->characterSet;
+    }
+
+    public function getCharacterEncoding(): ?string
+    {
+        if (empty($this->characterEncoding)) {
+            $detectedCharacterEncoding = mb_detect_encoding($this->getContent(), null, true);
+
+            $this->characterEncoding = $detectedCharacterEncoding === false
+                ? null
+                : strtolower($detectedCharacterEncoding);
+        }
+
+        return $this->characterEncoding;
     }
 
     public function deriveCharacterSet(): ?string
